@@ -2,3 +2,6 @@ sceneSetups:
 - path: Assets/GameScene.unity
   isLoaded: 1
   isActive: 1
+- path: Assets/ManyWorlds/Stealth Character/demo/demoscene_Stealth.unity
+  isLoaded: 1
+  isActive: 0
