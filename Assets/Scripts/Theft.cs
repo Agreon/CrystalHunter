@@ -10,28 +10,40 @@ public class Theft : Character {
 			+ 
 	
 	**/
+	[SerializeField]public GameObject m_Trap;
+	[SerializeField]public GameObject m_TrapSpawn;
 
-	/*public void Start(){
-		m_Animator = GetComponent<Animator>();
-	}*/
-	
 	
 	public void Kill() {
 		// Start Animation
 	}
 	
 	/**
-		
+		OnCollision
 	**/
-	public override void OnColissionEnter(Collision collision){
-	
+	public override void OnCollisionEnter(Collision collision){
+
+		var go = collision.gameObject;
+
+		if (go.tag == "Pickup") {
+			m_Items++;
+			Destroy (go);
+		} 
 	}
-	
+
 	/**
 		TODO: Lay Trap
 	**/
 	public override void Action(){
-		
+		GameObject trap = Instantiate (m_Trap, m_TrapSpawn.transform.position, m_TrapSpawn.transform.rotation, null);
+
+		Physics.IgnoreCollision(trap.GetComponent<Collider>(), GetComponent<Collider>());
+
+		/**
+		 * 
+		 * TODO: Crouch Animation
+		 * */
+
 	}
 
 }

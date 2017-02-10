@@ -5,10 +5,8 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
     [RequireComponent(typeof (Character))]
-    public class PlayerInput : MonoBehaviour
-    {
-      	public bool secondPlayer = false;
-      
+    public class AIInput : MonoBehaviour
+    {      
         private Character m_Character; 
 
         private void Start()

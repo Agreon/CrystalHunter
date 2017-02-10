@@ -110,6 +110,6 @@ public abstract class Character : MonoBehaviour
 		}
 		
 		public abstract void Action();
-		public abstract void OnColissionEnter(Collision collision); 
+		public abstract void OnCollisionEnter(Collision collision); 
 	
 }
