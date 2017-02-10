@@ -3,6 +3,10 @@ using System.Collections;
 
 public class CrystalMaster : Character {
 
+
+	[SerializeField]public GameObject m_CrystalShot;
+	[SerializeField]public GameObject m_ShotSpawn;
+
 	/**
 		TOOD: 
 			+ Krystall
@@ -25,12 +29,16 @@ public class CrystalMaster : Character {
 
 
 	}
-	
+
 	/**
-		TODO: Shoot Wizardry
-	**/
+	 * TODO: ANimations
+	 * */
 	public override void Action(){
-		
+		m_Animator.Play ("Shoot");
+
+		GameObject shot = Instantiate (m_CrystalShot, m_ShotSpawn.transform.position, m_ShotSpawn.transform.rotation, null);
+
+		Physics.IgnoreCollision(shot.GetComponent<Collider>(), GetComponent<Collider>());
 	}
 	
 	

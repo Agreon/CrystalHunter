@@ -38,7 +38,7 @@ public class Theft : Character {
 		GameObject trap = Instantiate (m_Trap, m_TrapSpawn.transform.position, m_TrapSpawn.transform.rotation, null);
 
 		Physics.IgnoreCollision(trap.GetComponent<Collider>(), GetComponent<Collider>());
-
+		m_Animator.Play("Crouch");
 		/**
 		 * 
 		 * TODO: Crouch Animation

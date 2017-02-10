@@ -18,7 +18,7 @@ public abstract class Character : MonoBehaviour
 	[SerializeField] float m_AnimSpeedMultiplier = 1f;
 
 	Rigidbody m_Rigidbody;
-	Animator m_Animator;
+	protected Animator m_Animator;
 	const float k_Half = 0.5f;
 	float m_TurnAmount;
 	float m_ForwardAmount;
