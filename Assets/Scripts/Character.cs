@@ -7,9 +7,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 [RequireComponent(typeof(Animator))]
 public abstract class Character : MonoBehaviour
 {
-	public int items;
-	public int moveSpeed;
-	public int currentSpeed;
+	public int m_Items = 0;
+	public int m_MoveSpeed = 1;
+	public int m_CurrentSpeed = 1;
 	
 	[SerializeField] float m_MovingTurnSpeed = 360;
 	[SerializeField] float m_StationaryTurnSpeed = 180;
@@ -57,6 +57,11 @@ public abstract class Character : MonoBehaviour
 
 		void UpdateAnimator(Vector3 move)
 		{
+
+			// TODO: Where do i set speed?
+		// move *= m_CurrentSpeed;
+
+
 			// update the animator parameters
 			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);

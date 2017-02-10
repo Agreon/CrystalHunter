@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Theft : Character {
 
@@ -14,9 +13,9 @@ public class Theft : Character {
 	
 	private Animator m_Animator;
 	
-	public void Start(){
+	/*public void Start(){
 		m_Animator = GetComponent<Animator>();
-	}
+	}*/
 	
 	
 	public void Kill() {
