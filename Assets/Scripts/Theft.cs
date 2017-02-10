@@ -10,9 +10,7 @@ public class Theft : Character {
 			+ 
 	
 	**/
-	
-	private Animator m_Animator;
-	
+
 	/*public void Start(){
 		m_Animator = GetComponent<Animator>();
 	}*/
@@ -35,8 +33,5 @@ public class Theft : Character {
 	public override void Action(){
 		
 	}
-	
-	
-
 
 }
