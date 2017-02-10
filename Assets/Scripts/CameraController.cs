@@ -62,11 +62,15 @@ namespace UnityStandardAssets.Utility
 			// distance meters behind the target
 			transform.position = target.position - (Vector3.forward * distance);
 
+
+			transform.position = target.position - (Vector3.forward * distance);
+			//transform.position.z += 3;
+
 			// Set the height of the camera
 			transform.position = new Vector3(transform.position.x ,wantedHeight , transform.position.z);
 
 			// Always look at the target
-			transform.LookAt(target);
+			//transform.LookAt(target);
 			//transform.rotation =  Quaternion.Euler(69, 0, 0);
 		}
 	}

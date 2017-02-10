@@ -62,6 +62,8 @@ Catch-Another / Each other
 	+ TODO: 
 		+ Prefabs durchlesen
 		+ UI
+			+ Aufgeladener Crystall-Animation wenn 3 gesammelt
+			
 		
 		+ Code-Architektur
 			+ Manager
@@ -79,9 +81,75 @@ Catch-Another / Each other
 				+ kümmert sich darum, dass items gespawned werden
 			
 			+ Falle : Object				
-			+ Item : Object
+			+ Kristall : Object
 			+ Magie: Object
+				+ Bewegung bei Player(Move) nachschauen
+				+ spawning bei Fallen nachschauen
+			
 
+			
+			+ Ki ist einmal Master, einmal Theft
+				+ so hängen die statemachines und mit den Objekten zusammen
+			+ Player ist einmal Movement
+				+ Jeweils einmal 
+			
+			# Neue strukt
+			PlayerInput
+			
+				Character character;
+				bool second
+				
+				update
+				+ If second: bool
+					+ alternative keys
+				+ else
+					+ standart keys
+					+ wasd/Y-Axis => RUn
+					+ leer => Action
+				
+				character.move / action
+				
+			AIInput
+			
+				+ Character character
+				+ StateMachine
+				+ Chasing 
+					+ cast char to CrystalMaster-Class
+					+ check if crystall near
+					+ shoot if 3 crystalls 
+						+ character.action
+					+ NavMesh.setDestination();
+					+ character.move(navmesh.move);
+				+ chased
+					+ get to next crystall
+					+ character.move(navmesh.mvoe);
+			
+			=> Entkopplung macht keinen SInn, da AIInput den Char eh braucht 
+				
+				
+			GameController 
+				+ onstart 
+					+ FindObjectByTag
+					+ set CrystalMaster
+						+ disable AIInput
+						+ enable PlayerInput
+						
+					+ set Theft
+						+ disable PlayerInput
+						+ enable AIInput
+						+ AI.setRunning
+			
+			abstract CharacterCtrl
+				+ items: num;
+				+ moveSpeed
+				+ currentSpeed
+				
+				+ move-ausgeschrieben
+				+ abstract action
+				+ abstract onCollision
+			
+			
+			## ######
 
 			+ PlayerMovement
 				+ Input
@@ -114,6 +182,7 @@ Catch-Another / Each other
 						+ Animation
 						+ Wird kurz festgehalten
 					+ Dieb
+						+ Animation
 						+ GameManager 
 							+ => Gewonnen
 			+ TheftController : CC
@@ -133,6 +202,8 @@ Catch-Another / Each other
 	+ Bedenken. 
 		+ Nicht zu wenige Items, damit es nicht zu langweilig wird
 		+ Nicht zu viele, damit es nicht zu schnell ist.
+		
+		=> UI
 		
 	+ assetstore bringt vlt. Inspiration
 		+ https://www.assetstore.unity3d.com/en/#!/content/58821 | Low Poly: Free Pack

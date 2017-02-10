@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CameraC.save.cs" />
      <Compile Include="Assets\External\DungeonVoxels\Scripts\Knight.cs" />
      <Compile Include="Assets\External\DungeonVoxels\Scripts\LightFlicker.cs" />
      <Compile Include="Assets\External\DungeonVoxels\Scripts\SpikeTrap.cs" />
@@ -156,9 +157,11 @@
      <Compile Include="Assets\ManyWorlds\Stealth Character\demo\Resources\DoneScripts\UnappliedScripts\DoneTags.cs" />
      <Compile Include="Assets\ManyWorlds\Stealth Character\demo\Resources\DoneScripts\UnappliedScripts\guiTextSet.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Character.cs" />
+     <Compile Include="Assets\Scripts\CrystalMaster.cs" />
      <Compile Include="Assets\Scripts\CustomThirdPersonChar.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
-     <Compile Include="Assets\TheftMovement.cs" />
+     <Compile Include="Assets\Scripts\PlayerInput.cs" />
      <None Include="Assets\External\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\External\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
      <None Include="Assets\External\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
