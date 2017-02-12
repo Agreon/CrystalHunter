@@ -3,19 +3,12 @@ using System.Collections;
 
 public class Theft : Character {
 
-	/**
-		TOOD: 
-			+ Krystall
-			+ Trap
-			+ 
-	
-	**/
 	[SerializeField]public GameObject m_Trap;
 	[SerializeField]public GameObject m_TrapSpawn;
 
-	
+	// Start Animation "Die"
 	public void Kill() {
-		// Start Animation
+		m_Animator.Play("Die");
 	}
 	
 	/**
@@ -26,24 +19,30 @@ public class Theft : Character {
 		var go = collision.gameObject;
 
 		if (go.tag == "Pickup") {
-			m_Items++;
+			m_Crystals++;
 			Destroy (go);
 		} 
 	}
 
 	/**
-		TODO: Lay Trap
+		Lay Trap
 	**/
 	public override void Action(){
-		GameObject trap = Instantiate (m_Trap, m_TrapSpawn.transform.position, m_TrapSpawn.transform.rotation, null);
 
-		Physics.IgnoreCollision(trap.GetComponent<Collider>(), GetComponent<Collider>());
+		if (m_Crystals != 3) {
+			return;
+		}
+		m_Crystals = 0;
+
+		var spawnPos = m_TrapSpawn.transform.position;
+		spawnPos.y = 0.4f;
+
+		GameObject trap = Instantiate (m_Trap, spawnPos, m_TrapSpawn.transform.rotation, null);
+
 		m_Animator.Play("Crouch");
 		/**
-		 * 
-		 * TODO: Crouch Animation
+		 * TODO: shorter Crouch Animation
 		 * */
-
 	}
 
 }

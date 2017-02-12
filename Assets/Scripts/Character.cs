@@ -5,9 +5,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Animator))]
-public abstract class Character : MonoBehaviour
+public abstract class Character : Trappable
 {
-	public int m_Items = 0;
+	public int m_Crystals = 0;
 	public int m_MoveSpeed = 1;
 	public int m_CurrentSpeed = 1;
 	
@@ -37,7 +37,9 @@ public abstract class Character : MonoBehaviour
 
 		public void Move(Vector3 move)
 		{
-
+			if (m_Trapped) {
+				//return;
+			}
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -61,11 +63,15 @@ public abstract class Character : MonoBehaviour
 			// TODO: Where do i set speed?
 		// move *= m_CurrentSpeed;
 
+			if (m_Trapped) {
+				m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
+				m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
+			} else {
+				m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+				m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 
-			// update the animator parameters
-			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
-			
+			}
+
 			// calculate which leg is behind, so as to leave that leg trailing in the jump animation
 			// (This code is reliant on the specific run cycle offset in our animations,
 			// and assumes one leg passes the other at the normalized clip times of 0.0 and 0.5)
@@ -108,6 +114,22 @@ public abstract class Character : MonoBehaviour
 				m_Rigidbody.velocity = v;
 			}
 		}
+
+
+	public override void Trap(){
+		Debug.Log ("Catched");
+		// So that the char is in the middle of the trap
+		this.Move (new Vector3 (0,0,0));
+		m_Animator.SetFloat("Forward", 0, 0.5f, Time.deltaTime);
+		m_Animator.SetFloat("Turn", 0, 0.5f, Time.deltaTime);
+
+		m_Trapped = true;
+	}
+
+	public override void Release(){
+		Debug.Log ("Released");
+		m_Trapped = false;
+	}
 		
 		public abstract void Action();
 		public abstract void OnCollisionEnter(Collision collision); 

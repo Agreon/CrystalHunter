@@ -37,11 +37,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
              // we use world-relative directions
              move = v*Vector3.forward + h*Vector3.right;
-           
-			/**
-				TODO: do stuff with currentSpeed of char
-				=> Falls er kristalle aufhebt
-			**/
 
             // pass all parameters to the character control script
             m_Character.Move(move);
