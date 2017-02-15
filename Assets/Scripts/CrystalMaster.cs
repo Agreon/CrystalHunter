@@ -20,6 +20,7 @@ public class CrystalMaster : Character {
 		if (go.tag == "Pickup") {
 			m_Crystals++;
 			Destroy (go);
+			SpeedUp();
 		} else if (go.tag == "Trap") {
 			Debug.Log ("Collision with Trap");
 			var trap = go.GetComponent<TrapController> ();

@@ -21,6 +21,7 @@ public class Theft : Character {
 		if (go.tag == "Pickup") {
 			m_Crystals++;
 			Destroy (go);
+			SpeedUp();
 		} 
 	}
 
