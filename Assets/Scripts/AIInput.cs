@@ -1,48 +1,40 @@
-using System;
-using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+﻿using UnityEngine;
+using System.Collections.Generic;
+using AI.FiniteStateMachine;
 
-namespace UnityStandardAssets.Characters.ThirdPerson
-{
-    [RequireComponent(typeof (Character))]
-    public class AIInput : MonoBehaviour
-    {      
-        private Character m_Character; 
+[RequireComponent(typeof (UnityEngine.AI.NavMeshAgent))]
+[RequireComponent(typeof (Character))]
+public class AIInput : MonoBehaviour {
+	
+	// TODO: Dont serialize
+	public Character m_Character;
+	public Character m_Theft;
+	public CrystalManager m_CrystalManager;
+	
+	public GameObject m_TargetedCrystal;
 
-        private void Start()
-        {
-            m_Character = GetComponent<Character>();
-        }
+	private FSM<AIInput> m_Machine;
 
-        // Fixed update is called in sync with physics
-        private void FixedUpdate()
-        {
-            // read inputs
-            float h = CrossPlatformInputManager.GetAxis("Horizontal");
-            float v = CrossPlatformInputManager.GetAxis("Vertical");
-            bool action = Input.GetKey(KeyCode.C);
-            
-            Vector3 move = new Vector3();
-            
-            // When action is pressed, don't walk
-            if(action) {
-    			// Stop char	
-            	m_Character.Move(move);
-            	
-            	m_Character.Action();
-            	return;
-            }
-		
-             // we use world-relative directions
-             move = v*Vector3.forward + h*Vector3.right;
-           
-			/**
-				TODO: do stuff with currentSpeed of char
-				=> Falls er kristalle aufhebt
-			**/
+	void Start() {
+		m_Character = GetComponent<Character>();
 
-            // pass all parameters to the character control script
-            m_Character.Move(move);
-        }
-    }
+		// the initial state has to be passed to the constructor
+		m_Machine = new FSM<AIInput>( this, new ChaseTheft() );
+
+		if(m_Machine == null) {
+			Debug.Log("ASD");
+		}
+
+		// we can now add any additional states
+		m_Machine.addState( new CollectCrystal() );
+	}
+
+	void Update() {
+		if(m_Machine != null) {
+			// update the state machine
+			m_Machine.update( Time.deltaTime );
+		} else {
+			Debug.Log("Problem");
+		}
+	}
 }

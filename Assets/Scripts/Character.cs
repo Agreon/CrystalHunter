@@ -8,9 +8,13 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public abstract class Character : Trappable
 {
 	public int m_Crystals = 0;
-	public int m_MoveSpeed = 1;
-	public int m_CurrentSpeed = 1;
+	public float m_MovementSpeed = 1;
+	public float m_CurrentSpeed;
+	public float m_SpeedUpDuration = 3;
 	
+	private float m_SpeedUpCounter;
+	
+	// TODO: Check whats needed
 	[SerializeField] float m_MovingTurnSpeed = 360;
 	[SerializeField] float m_StationaryTurnSpeed = 180;
 	[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
@@ -23,7 +27,6 @@ public abstract class Character : Trappable
 	float m_TurnAmount;
 	float m_ForwardAmount;
 	Vector3 m_GroundNormal;
-
 	
 	public Character() {}
 	
@@ -33,13 +36,32 @@ public abstract class Character : Trappable
 			m_Rigidbody = GetComponent<Rigidbody>();
 
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+			
+			m_CurrentSpeed = m_MovementSpeed;
 	}
 
 		public void Move(Vector3 move)
 		{
-			if (m_Trapped) {
-				//return;
+
+			
+			// If Speeded Up
+			if(m_CurrentSpeed != m_MovementSpeed) {
+				m_SpeedUpCounter += Time.deltaTime;	
 			}
+			
+			// End Speed Up
+			if(m_SpeedUpCounter >= m_SpeedUpDuration) {
+				m_CurrentSpeed = m_MovementSpeed;
+			}
+			
+			/* if (m_Trapped) {
+				m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
+				m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
+				return;
+			} */
+			
+			move *= m_CurrentSpeed;
+			
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -56,13 +78,14 @@ public abstract class Character : Trappable
 			UpdateAnimator(move);
 		}
 
+		public void SpeedUp(){
+			m_CurrentSpeed = m_MovementSpeed*1.5f;
+			m_SpeedUpCounter = 0;
+		}
+
 
 		void UpdateAnimator(Vector3 move)
 		{
-
-			// TODO: Where do i set speed?
-		// move *= m_CurrentSpeed;
-
 			if (m_Trapped) {
 				m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
 				m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
@@ -115,7 +138,6 @@ public abstract class Character : Trappable
 			}
 		}
 
-
 	public override void Trap(){
 		Debug.Log ("Catched");
 		// So that the char is in the middle of the trap
@@ -124,11 +146,16 @@ public abstract class Character : Trappable
 		m_Animator.SetFloat("Turn", 0, 0.5f, Time.deltaTime);
 
 		m_Trapped = true;
+		
+		// Disable NavMeshAgent
+		GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;;
 	}
 
 	public override void Release(){
 		Debug.Log ("Released");
 		m_Trapped = false;
+		// Enable NavMeshAgent
+		GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 	}
 		
 		public abstract void Action();

@@ -20,6 +20,7 @@ public class CrystalMaster : Character {
 		if (go.tag == "Pickup") {
 			m_Crystals++;
 			Destroy (go);
+			SpeedUp();
 		} else if (go.tag == "Trap") {
 			Debug.Log ("Collision with Trap");
 			var trap = go.GetComponent<TrapController> ();
@@ -48,7 +49,9 @@ public class CrystalMaster : Character {
 
 		m_Animator.Play ("Shoot");
 
-		GameObject shot = Instantiate (m_CrystalShot, m_ShotSpawn.transform.position, m_ShotSpawn.transform.rotation, null);
+		// Rotation in character rot
+
+		GameObject shot = Instantiate (m_CrystalShot, m_ShotSpawn.transform.position, transform.rotation, null);
 
 		Physics.IgnoreCollision(shot.GetComponent<Collider>(), GetComponent<Collider>());
 		shot.GetComponent<Rigidbody>().velocity = transform.forward * m_ShotSpeed;		
