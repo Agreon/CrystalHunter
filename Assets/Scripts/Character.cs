@@ -40,103 +40,103 @@ public abstract class Character : Trappable
 			m_CurrentSpeed = m_MovementSpeed;
 	}
 
-		public void Move(Vector3 move)
+	public void Move(Vector3 move)
+	{
+
+		
+		// If Speeded Up
+		if(m_CurrentSpeed != m_MovementSpeed) {
+			m_SpeedUpCounter += Time.deltaTime;	
+		}
+		
+		// End Speed Up
+		if(m_SpeedUpCounter >= m_SpeedUpDuration) {
+			m_CurrentSpeed = m_MovementSpeed;
+		}
+		
+		/* if (m_Trapped) {
+			m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
+			m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
+			return;
+		} */
+		
+		move *= m_CurrentSpeed;
+		
+		// convert the world relative moveInput vector into a local-relative
+		// turn amount and forward amount required to head in the desired
+		// direction.
+		if (move.magnitude > 1f) move.Normalize();
+		move = transform.InverseTransformDirection(move);
+		
+		move = Vector3.ProjectOnPlane(move, m_GroundNormal);
+		m_TurnAmount = Mathf.Atan2(move.x, move.z);
+		m_ForwardAmount = move.z;
+
+		ApplyExtraTurnRotation();
+
+		// send input and other state parameters to the animator
+		UpdateAnimator(move);
+	}
+
+	public void SpeedUp(){
+		m_CurrentSpeed = m_MovementSpeed*1.5f;
+		m_SpeedUpCounter = 0;
+	}
+
+
+	void UpdateAnimator(Vector3 move)
+	{
+		if (m_Trapped) {
+			m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
+			m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
+		} else {
+			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
+
+		}
+
+		// calculate which leg is behind, so as to leave that leg trailing in the jump animation
+		// (This code is reliant on the specific run cycle offset in our animations,
+		// and assumes one leg passes the other at the normalized clip times of 0.0 and 0.5)
+		float runCycle =
+			Mathf.Repeat(
+				m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime + m_RunCycleLegOffset, 1);
+		float jumpLeg = (runCycle < k_Half ? 1 : -1) * m_ForwardAmount;
+		m_Animator.SetFloat("JumpLeg", jumpLeg);
+		
+
+		// the anim speed multiplier allows the overall speed of walking/running to be tweaked in the inspector,
+		// which affects the movement speed because of the root motion.
+		if (move.magnitude > 0)
 		{
-
-			
-			// If Speeded Up
-			if(m_CurrentSpeed != m_MovementSpeed) {
-				m_SpeedUpCounter += Time.deltaTime;	
-			}
-			
-			// End Speed Up
-			if(m_SpeedUpCounter >= m_SpeedUpDuration) {
-				m_CurrentSpeed = m_MovementSpeed;
-			}
-			
-			/* if (m_Trapped) {
-				m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
-				m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
-				return;
-			} */
-			
-			move *= m_CurrentSpeed;
-			
-			// convert the world relative moveInput vector into a local-relative
-			// turn amount and forward amount required to head in the desired
-			// direction.
-			if (move.magnitude > 1f) move.Normalize();
-			move = transform.InverseTransformDirection(move);
-			
-			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
-			m_TurnAmount = Mathf.Atan2(move.x, move.z);
-			m_ForwardAmount = move.z;
-
-			ApplyExtraTurnRotation();
-
-			// send input and other state parameters to the animator
-			UpdateAnimator(move);
+			m_Animator.speed = m_AnimSpeedMultiplier;
 		}
-
-		public void SpeedUp(){
-			m_CurrentSpeed = m_MovementSpeed*1.5f;
-			m_SpeedUpCounter = 0;
-		}
-
-
-		void UpdateAnimator(Vector3 move)
+		else
 		{
-			if (m_Trapped) {
-				m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
-				m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
-			} else {
-				m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-				m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
-
-			}
-
-			// calculate which leg is behind, so as to leave that leg trailing in the jump animation
-			// (This code is reliant on the specific run cycle offset in our animations,
-			// and assumes one leg passes the other at the normalized clip times of 0.0 and 0.5)
-			float runCycle =
-				Mathf.Repeat(
-					m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime + m_RunCycleLegOffset, 1);
-			float jumpLeg = (runCycle < k_Half ? 1 : -1) * m_ForwardAmount;
-			m_Animator.SetFloat("JumpLeg", jumpLeg);
-			
-
-			// the anim speed multiplier allows the overall speed of walking/running to be tweaked in the inspector,
-			// which affects the movement speed because of the root motion.
-			if (move.magnitude > 0)
-			{
-				m_Animator.speed = m_AnimSpeedMultiplier;
-			}
-			else
-			{
-				m_Animator.speed = 1;
-			}
+			m_Animator.speed = 1;
 		}
+	}
 
-		void ApplyExtraTurnRotation()
+	void ApplyExtraTurnRotation()
+	{
+		// help the character turn faster (this is in addition to root rotation in the animation)
+		float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, m_ForwardAmount);
+		transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+	}
+
+
+	public void OnAnimatorMove()
+	{
+		// we implement this function to override the default root motion.
+		// this allows us to modify the positional speed before it's applied.
+		if (Time.deltaTime > 0)
 		{
-			// help the character turn faster (this is in addition to root rotation in the animation)
-			float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, m_ForwardAmount);
-			transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+			Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
+			// we preserve the existing y part of the current velocity.
+			v.y = m_Rigidbody.velocity.y;
+			m_Rigidbody.velocity = v;
 		}
-
-
-		public void OnAnimatorMove()
-		{
-			// we implement this function to override the default root motion.
-			// this allows us to modify the positional speed before it's applied.
-			if (Time.deltaTime > 0)
-			{
-				Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
-				// we preserve the existing y part of the current velocity.
-				v.y = m_Rigidbody.velocity.y;
-				m_Rigidbody.velocity = v;
-			}
-		}
+	}
 
 	public override void Trap(){
 		Debug.Log ("Catched");
@@ -148,17 +148,21 @@ public abstract class Character : Trappable
 		m_Trapped = true;
 		
 		// Disable NavMeshAgent
-		GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;;
+		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
+			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+		}
 	}
 
 	public override void Release(){
-		Debug.Log ("Released");
 		m_Trapped = false;
+
 		// Enable NavMeshAgent
-		GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
+		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
+			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
+		}
 	}
 		
-		public abstract void Action();
-		public abstract void OnCollisionEnter(Collision collision); 
+	public abstract void Action();
+	public abstract void OnCollisionEnter(Collision collision); 
 	
 }

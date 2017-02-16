@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class ShotController : MonoBehaviour {
 
+	public GameObject m_Trap;
 	public GameObject m_SpawnObject;
 
 	// Use this for initialization
@@ -26,22 +27,23 @@ public class ShotController : MonoBehaviour {
 
 			Debug.Log ("Hit theft");
 
-			Destroy (this.gameObject);
-
 			var theft = go.GetComponent<Theft> ();
 			var position = theft.m_TrapSpawn.transform.position;
 			position.y = 0.4f;
 			
 			// Using thefts Trapspawn-object for positioning
-			var trapObject = Instantiate (theft.m_Trap, theft.m_TrapSpawn.transform.position, theft.m_TrapSpawn.transform.rotation, null);
+			var trapObject = Instantiate (m_Trap, theft.m_TrapSpawn.transform.position, theft.m_TrapSpawn.transform.rotation, null);
 			TrapController trap = trapObject.GetComponent<TrapController> ();
-			trap.m_Duration = 1f;
+			trap.m_Duration = 2f;
 
 			trap.Trigger(theft);
 
+			Destroy (this.gameObject);
+
 		} else if (go.tag == "Wall") {
 			   Vector3 collNormal = collision.contacts[0].normal;
-			   collNormal.y = -1;
+			   collNormal.y = -0.65f;
+				transform.rotation = Quaternion.LookRotation(collNormal);
 			   GetComponent<Rigidbody>().velocity = collNormal * 5;		
 			   
 		} else if (go.tag == "Ground") {

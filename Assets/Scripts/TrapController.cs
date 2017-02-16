@@ -17,6 +17,7 @@ public class TrapController : MonoBehaviour {
 
 	public void Trigger(Trappable trappable) {
 		if(m_IsTriggered){
+			Debug.Log ("Already Triggered");
 			return;
 		}
 		
@@ -24,6 +25,7 @@ public class TrapController : MonoBehaviour {
 
 		m_Animator.SetBool ("Triggered", true);
 
+		// Block object
 		m_TrappedObject = trappable;
 		m_TrappedObject.Trap();
 
@@ -51,11 +53,11 @@ public class TrapController : MonoBehaviour {
 
 			//Destroy (this);
 				
-			 if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+			 /*if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
 			 {
 				// Avoid any reload.
 				Destroy(this.gameObject);
-			 }
+			 }*/
 					
 		  /*  if (!m_Animator.IsPlaying("TrapRetreat"))
      		{
