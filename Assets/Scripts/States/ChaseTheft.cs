@@ -6,6 +6,8 @@ public class ChaseTheft : FSMState<AIInput>
 {
 	private UnityEngine.AI.NavMeshAgent m_Agent;
 	
+	private float m_ShootChance = 1;
+	
 	private Transform m_Target;
 	private Transform m_Character;
 	
@@ -18,7 +20,6 @@ public class ChaseTheft : FSMState<AIInput>
 		m_Agent = _context.GetComponent<UnityEngine.AI.NavMeshAgent>();
 		m_Agent.updatePosition = false;
 		m_Agent.updateRotation = false;
-		m_Agent.SetDestination(m_Target.position);
 	}
 		
 	/**
@@ -42,10 +43,17 @@ public class ChaseTheft : FSMState<AIInput>
 
 		// Shoot at player
 		if(canSeeTheft && _context.m_Character.m_Crystals >= 3) {
+			
+			// Only shoot with chance
+			if(Random.Range(0,100) < m_ShootChance) {		
 			Debug.Log("Shoot");
+			
 			// TODO: Rotate to player?
+
 			 _context.m_Character.Action();
 			 return;
+			}
+			
 		} 
 		
 		/**

@@ -6,7 +6,7 @@ public class TrapController : MonoBehaviour {
 	private bool m_IsTriggered = false;
 	private float m_TimeActive = 0f;
 
-	[SerializeField] public float m_Duration = 3.0f;
+	[SerializeField] public float m_Duration = 2.0f;
 
 	private Trappable m_TrappedObject;
 	private Animator m_Animator;
@@ -16,6 +16,10 @@ public class TrapController : MonoBehaviour {
 	}
 
 	public void Trigger(Trappable trappable) {
+		if(m_IsTriggered){
+			return;
+		}
+		
 		m_IsTriggered = true;
 
 		m_Animator.SetBool ("Triggered", true);
@@ -45,7 +49,19 @@ public class TrapController : MonoBehaviour {
 
 			m_TrappedObject.Release ();
 
-			Destroy (this);
-		}
+			//Destroy (this);
+				
+			 if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+			 {
+				// Avoid any reload.
+				Destroy(this.gameObject);
+			 }
+					
+		  /*  if (!m_Animator.IsPlaying("TrapRetreat"))
+     		{
+        	Destroy(this.gameObject);
+        	}*/
+
+		}		
 	}
 }
