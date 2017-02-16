@@ -36,6 +36,7 @@ Catch-Another / Each other
 		+ Min/Max-Distanz
 	+ Gewonnen
 		+ Wenn man den anderen fängt
+		+ Wenn der Dieb 50 Kristalle hat
 
 + Setting?
 	+ Magier in kerker?
@@ -148,26 +149,6 @@ Catch-Another / Each other
 				+ abstract action
 				+ abstract onCollision
 			
-			
-			## ######
-
-			+ PlayerMovement
-				+ Input
-				+ Slot (UnityEvents?)
-					+ Methode von CharacterController für (schuss/Laufen)
-			+ AIMovement
-				+ KI die Vectoren an Controller weitergibt
-				+ Slot
-					+ PlayerPos
-			
-			CharacterController : Interface
-				+ items: num;
-				+ currentSpeed
-				
-				+ movement()
-				+ Action()
-								
-				+ onCollision()
 		
 			+ GolemController : CC			
 				+ Action() (shoot)
@@ -194,6 +175,15 @@ Catch-Another / Each other
 				+ collision mit 
 					+ Item/Magie
 				
+
+
+			+ Trap
+
+				+ Trigger(catchableGO) 
+					+ catchable.catch
+					+ catchable.release
+
+
 				
 			+ CameraController
 				+ Kümmert sich um die Kamerabewegung
