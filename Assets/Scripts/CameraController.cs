@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace UnityStandardAssets.Utility
 {
+	/**
+	 * TODO: Remove unecessary stuff
+	 * 
+	 * */
 	public class CameraController : MonoBehaviour
 	{
 
@@ -20,7 +24,7 @@ namespace UnityStandardAssets.Utility
 		private float heightDamping;
 
 		[SerializeField]
-		private float minHeight = 2f;
+		private float m_MinHeight = 2f;
 		
 		[SerializeField]
 		private float maxHeight = 8f;
@@ -54,24 +58,24 @@ namespace UnityStandardAssets.Utility
 			// Calculate Height
 			
 			var centerDist = Vector3.Distance(targets[0].position, target.position);
-			
+
+
 			var wantedHeight = target.position.y + height + (centerDist*1.8f);
-			
+			if (wantedHeight < m_MinHeight) {
+				wantedHeight = m_MinHeight;
+			}
+
 
 			// Set the position of the camera on the x-z plane to:
 			// distance meters behind the target
 			transform.position = target.position - (Vector3.forward * distance);
 
-
-			transform.position = target.position - (Vector3.forward * distance);
 			//transform.position.z += 3;
 
 			// Set the height of the camera
 			transform.position = new Vector3(transform.position.x ,wantedHeight , transform.position.z);
 
-			// Always look at the target
-			//transform.LookAt(target);
-			//transform.rotation =  Quaternion.Euler(69, 0, 0);
+
 		}
 	}
 }

@@ -21,22 +21,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             // read inputs
             float h = CrossPlatformInputManager.GetAxis("Horizontal");
-            float v = CrossPlatformInputManager.GetAxis("Vertical");
-            bool action = Input.GetKey(KeyCode.C);
+			float v = CrossPlatformInputManager.GetAxis("Vertical");
+            float action = CrossPlatformInputManager.GetAxis("Jump");
+			//bool action = Input.GetKey(KeyCode.Space);
             
-            Vector3 move = new Vector3();
-            
-            // When action is pressed, don't walk
-            if(action) {
-    			// Stop char	
-            	m_Character.Move(move);
-            	
-            	m_Character.Action();
-            	return;
-            }
-		
-             // we use world-relative directions
-             move = v*Vector3.forward + h*Vector3.right;
+			// When action is pressed, don't walk
+			if(action > 0.1f) {//if(action) {
+				m_Character.Action();
+				return;
+			}
+
+          	// we use world-relative directions
+            Vector3 move = v*Vector3.forward + h*Vector3.right;
 
             // pass all parameters to the character control script
             m_Character.Move(move);

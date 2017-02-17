@@ -156,6 +156,8 @@ public abstract class Character : Trappable
 	public override void Release(){
 		m_Trapped = false;
 
+		Debug.Log ("Releaesed");
+
 		// Enable NavMeshAgent
 		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
 			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;

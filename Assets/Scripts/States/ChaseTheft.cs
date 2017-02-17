@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using AI.FiniteStateMachine;
 
 public class ChaseTheft : FSMState<AIInput>
@@ -55,38 +56,61 @@ public class ChaseTheft : FSMState<AIInput>
 			}
 			
 		} 
-		
-		/**
-			if player very near
-				if  DistToCrystal + DistCrystalToPlayer*0.5(x) < DistToPlayer
-					=> Verhindert, dass er sich umdreht
-			else 
-				if DistToCrystal < y 
-				
-		**/
-		
-		/*foreach( GameObject c in _context.m_CrystalManager.m_Crystals ) {
-			if(_context.m_Character.m_Crystals < 3 )
-			// &&c. Theft further away than next crystal?  MinTreshold) {
-				// TODO: Parameter übergeben?
-				_context.m_TargetedCrystal = c;
-				_machine.changeState<CollectCrystal>();
+
+
+		return;
+
+		List<GameObject> crystals = _context.m_CrystalManager.getCrystals ();
+
+		// Abort if we got enough crystals or there are no to find
+		if (_context.m_Character.m_Crystals >= 3 || crystals.Count == 0) {
+			return;
+		}
+
+		float minDistance = float.MaxValue;
+		GameObject nearestCrystal = null;
+
+		foreach( GameObject c in crystals ) {
+
+			float distanceToCrystal = Vector3.Distance (m_Character.position, c.transform.position);
+
+			if (distanceToCrystal < minDistance) {
+				minDistance = distanceToCrystal;
+				nearestCrystal = c;
 			}
-		}*/
+		}
+			
+		//if  DistToCrystal + DistCrystalToPlayer*0.5(x) < DistToPlayer
+
+		float distanceToPlayer = Vector3.Distance (_context.m_Theft.transform.position, _context.m_Character.transform.position);
+		float distanceCrystallToPlayer = Vector3.Distance (_context.m_Theft.transform.position, nearestCrystal.transform.position);
+
+		Debug.Log (distanceToPlayer);
+
+		// If Player is very near
+		if ( distanceToPlayer < 5 && (minDistance + (distanceCrystallToPlayer*0.5) < distanceToPlayer)) {
+			_context.m_TargetedCrystal = nearestCrystal;
+			_machine.changeState<CollectCrystal>();
+		// If Crystal is near enough
+		} else if(minDistance < 10) {
+			_context.m_TargetedCrystal = nearestCrystal;
+			_machine.changeState<CollectCrystal>();
+		}
+		
 	}
 		
 	/**
-		Moves the character
-	*/
+	 * Moves the character
+	 * */
 	public override void update( float deltaTime ) {
-		
+
 		if(m_Agent.enabled) {
 			m_Agent.SetDestination(m_Target.position);
 		}
-		
+
 		Vector3 velocity = m_Agent.nextPosition - m_Character.position;
 
-		
+
 		_context.m_Character.Move(velocity);
 	}
 }

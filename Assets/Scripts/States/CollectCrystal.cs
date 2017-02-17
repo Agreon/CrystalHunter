@@ -26,7 +26,7 @@ public class CollectCrystal : FSMState<AIInput>
 	
 	**/
 	public override void reason() {
-		if(!m_Target || m_Target == null) {
+		if(_context.m_TargetedCrystal == null) {
 			_machine.changeState<ChaseTheft>();
 		}
 		
@@ -38,7 +38,12 @@ public class CollectCrystal : FSMState<AIInput>
 		TODO: Get move-direction of agent
 	*/
 	public override void update( float deltaTime ) {
-		
-	
+		if(m_Agent.enabled) {
+			m_Agent.SetDestination(m_Target.position);
+		}
+
+		Vector3 velocity = m_Agent.nextPosition - m_Character.position;
+
+		_context.m_Character.Move(velocity);
 	}
 }

@@ -59,13 +59,24 @@ Catch-Another / Each other
 	+ Schüsse sind ParticleSystems
 		+ Erleuchten umgebung
 	+ Kristall glimmen leicht im takt der musik?
+		=> Get all PointLights
+		=> Intensity => Set
 		
 	+ TODO: 
-		+ Prefabs durchlesen
+
+		+ Wenn Singleplayer
+			=> Show Trap?
+
 		+ UI
 			+ Aufgeladener Crystall-Animation wenn 3 gesammelt
 			
+		+ Theft
+			+ Action is buggy
 		
+
+		+ Animationen
+			+ Wenn gefangen
+
 		+ Code-Architektur
 			+ Manager
 				+ Wie war das mit den States und den GameStates?
@@ -80,13 +91,8 @@ Catch-Another / Each other
 						+ set ui
 			+ (ItemManager)
 				+ kümmert sich darum, dass items gespawned werden
-			
-			+ Falle : Object				
-			+ Kristall : Object
-			+ Magie: Object
-				+ Bewegung bei Player(Move) nachschauen
-				+ spawning bei Fallen nachschauen
-			
+				+ calculated an standart-stellen
+				+ wie checkt man ob aktuelle stelle belegt ist?
 
 			
 			+ Ki ist einmal Master, einmal Theft
@@ -95,20 +101,7 @@ Catch-Another / Each other
 				+ Jeweils einmal 
 			
 			# Neue strukt
-			PlayerInput
-			
-				Character character;
-				bool second
-				
-				update
-				+ If second: bool
-					+ alternative keys
-				+ else
-					+ standart keys
-					+ wasd/Y-Axis => RUn
-					+ leer => Action
-				
-				character.move / action
+				+ 
 				
 			AIInput
 			
@@ -149,46 +142,9 @@ Catch-Another / Each other
 				+ abstract action
 				+ abstract onCollision
 			
-		
-			+ GolemController : CC			
-				+ Action() (shoot)
-					+ if enough items
-					+ zugriff auf anim
-				
-				+ onCollision mit 
-					+ Item
-						+ Items++;
-						+ Sound? Animation?
-					+ Falle 
-						+ Animation
-						+ Wird kurz festgehalten
-					+ Dieb
-						+ Animation
-						+ GameManager 
-							+ => Gewonnen
-			+ TheftController : CC
-				+ Action() (falle)
-					+ enough items?
-					+ animation
-					+ create falle (slot mit verschiedenen?)								
-				+ Movement()
-				+ collision mit 
-					+ Item/Magie
-				
-
-
-			+ Trap
-
-				+ Trigger(catchableGO) 
-					+ catchable.catch
-					+ catchable.release
-
-
-				
+						
 			+ CameraController
-				+ Kümmert sich um die Kamerabewegung
-				+ Slots
-					+ Array von zu beobachteten Objekten
+				+ Verbessern
 	+ Bedenken. 
 		+ Nicht zu wenige Items, damit es nicht zu langweilig wird
 		+ Nicht zu viele, damit es nicht zu schnell ist.
@@ -220,6 +176,9 @@ Catch-Another / Each other
 				+ Verfolgter
 				+ Müsste waffen entfernen
 		+ Partikel
+			=> Schießt Kristall, der ganz wenig partikel hat?
+6-9, 10?
+
 			+ https://www.assetstore.unity3d.com/en/#!/content/72399 | Attack
 			+ https://www.assetstore.unity3d.com/en/#!/content/59315 | Attack
 			+ https://www.assetstore.unity3d.com/en/#!/content/65810 | Attack

@@ -18,23 +18,17 @@ public class AIInput : MonoBehaviour {
 	void Start() {
 		m_Character = GetComponent<Character>();
 
+		m_CrystalManager = Object.FindObjectOfType<CrystalManager>();
+
 		// the initial state has to be passed to the constructor
 		m_Machine = new FSM<AIInput>( this, new ChaseTheft() );
-
-		if(m_Machine == null) {
-			Debug.Log("ASD");
-		}
 
 		// we can now add any additional states
 		m_Machine.addState( new CollectCrystal() );
 	}
 
 	void Update() {
-		if(m_Machine != null) {
-			// update the state machine
-			m_Machine.update( Time.deltaTime );
-		} else {
-			Debug.Log("Problem");
-		}
+		// update the state machine
+		m_Machine.update( Time.deltaTime );
 	}
 }

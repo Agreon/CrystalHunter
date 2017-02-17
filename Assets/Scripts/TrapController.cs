@@ -51,19 +51,11 @@ public class TrapController : MonoBehaviour {
 
 			m_TrappedObject.Release ();
 
-			//Destroy (this);
-				
-			 /*if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-			 {
+			if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+			{
 				// Avoid any reload.
 				Destroy(this.gameObject);
-			 }*/
-					
-		  /*  if (!m_Animator.IsPlaying("TrapRetreat"))
-     		{
-        	Destroy(this.gameObject);
-        	}*/
-
+			}
 		}		
 	}
 }
