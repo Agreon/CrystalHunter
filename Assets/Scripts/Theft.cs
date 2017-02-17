@@ -20,7 +20,8 @@ public class Theft : Character {
 
 		if (go.tag == "Pickup") {
 			m_Crystals++;
-			Destroy (go);
+			//Destroy (go);
+			m_CrystalManager.CrystalCollected(go);
 			SpeedUp();
 		} 
 	}

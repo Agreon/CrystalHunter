@@ -27,12 +27,13 @@ public class CrystalManager : MonoBehaviour {
 
 	}
 
-	void CrystalCollected(GameObject crystal) {
-		/**
-		 * Remove from m_Crystals
-		 * Spawn new
-		 * */
+	/**
+	 * Removes the Crystal from the list, destroys it and spawns a new one.
+	*/
+	public void CrystalCollected(GameObject crystal) {
+
 		m_Crystals.Remove (crystal);
+		Destroy (crystal);
 
 		SpawnCrystal ();
 	}
@@ -56,11 +57,10 @@ public class CrystalManager : MonoBehaviour {
 			break;
 		}
 			
-		var crystal = Instantiate(m_CrystalPickup, spawnAt, Quaternion.LookRotation(new Vector3(0,0,0)));
+		var crystal = Instantiate(m_CrystalPickup, spawnAt, Quaternion.LookRotation(new Vector3(1,0,0)));
 
 		m_Crystals.Add (crystal);
 
-		return;
 		/*
 		// Auslagern?
 		int tileSize = 7;

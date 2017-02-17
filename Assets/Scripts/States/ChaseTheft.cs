@@ -57,9 +57,7 @@ public class ChaseTheft : FSMState<AIInput>
 			
 		} 
 
-
-		return;
-
+	
 		List<GameObject> crystals = _context.m_CrystalManager.getCrystals ();
 
 		// Abort if we got enough crystals or there are no to find
@@ -72,7 +70,7 @@ public class ChaseTheft : FSMState<AIInput>
 
 		foreach( GameObject c in crystals ) {
 
-			float distanceToCrystal = Vector3.Distance (m_Character.position, c.transform.position);
+			float distanceToCrystal = Vector3.Distance (m_Character.position, c.transform.position);	// TODO: Faile bc of not deletion of crystalmanager
 
 			if (distanceToCrystal < minDistance) {
 				minDistance = distanceToCrystal;
@@ -80,21 +78,23 @@ public class ChaseTheft : FSMState<AIInput>
 			}
 		}
 			
-		//if  DistToCrystal + DistCrystalToPlayer*0.5(x) < DistToPlayer
-
 		float distanceToPlayer = Vector3.Distance (_context.m_Theft.transform.position, _context.m_Character.transform.position);
 		float distanceCrystallToPlayer = Vector3.Distance (_context.m_Theft.transform.position, nearestCrystal.transform.position);
 
 		Debug.Log (distanceToPlayer);
 
-		// If Player is very near
-		if ( distanceToPlayer < 5 && (minDistance + (distanceCrystallToPlayer*0.5) < distanceToPlayer)) {
-			_context.m_TargetedCrystal = nearestCrystal;
+		// If Player is very near  | TODO: Formel verbessern
+		//if ( distanceToPlayer < 9 && (minDistance + (distanceCrystallToPlayer*0.5) < distanceToPlayer)) {
+
+		if(distanceToPlayer < 5) {
+		/*context.m_TargetedCrystal = nearestCrystal;
 			_machine.changeState<CollectCrystal>();
+			Debug.Log ("Crystal Near enough");*/
 		// If Crystal is near enough
-		} else if(minDistance < 10) {
+		} else {//if(minDistance < 14) {
 			_context.m_TargetedCrystal = nearestCrystal;
 			_machine.changeState<CollectCrystal>();
+			Debug.Log ("Player Far enough");
 		}
 		
 	}

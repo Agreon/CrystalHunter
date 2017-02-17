@@ -13,6 +13,8 @@ public abstract class Character : Trappable
 	public float m_SpeedUpDuration = 3;
 	
 	private float m_SpeedUpCounter;
+
+	public CrystalManager m_CrystalManager;
 	
 	// TODO: Check whats needed
 	[SerializeField] float m_MovingTurnSpeed = 360;
@@ -155,9 +157,7 @@ public abstract class Character : Trappable
 
 	public override void Release(){
 		m_Trapped = false;
-
-		Debug.Log ("Releaesed");
-
+	
 		// Enable NavMeshAgent
 		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
 			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;

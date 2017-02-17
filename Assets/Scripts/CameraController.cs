@@ -40,9 +40,9 @@ namespace UnityStandardAssets.Utility
 		// Update is called once per frame
 		void LateUpdate()
 		{
-			if(targets.Count < 1)
+			if (targets.Count < 1) {
 				return;
-				
+			}
 				
 			// Find Center of Objects	
 			var center = new Vector3(0,0,0);	
@@ -55,8 +55,8 @@ namespace UnityStandardAssets.Utility
 
 			target.position = center / targets.Count;
 
-			// Calculate Height
-			
+
+			// Calculate Height	
 			var centerDist = Vector3.Distance(targets[0].position, target.position);
 
 

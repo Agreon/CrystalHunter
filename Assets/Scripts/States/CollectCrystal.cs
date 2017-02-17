@@ -17,7 +17,6 @@ public class CollectCrystal : FSMState<AIInput>
 		m_Character = _context.m_Character.transform;
 		
 		m_Agent = _context.GetComponent<UnityEngine.AI.NavMeshAgent>();
-		m_Agent.SetDestination(m_Target.position);
 	}
 		
 	/**

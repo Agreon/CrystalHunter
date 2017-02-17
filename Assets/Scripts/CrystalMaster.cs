@@ -19,7 +19,8 @@ public class CrystalMaster : Character {
 
 		if (go.tag == "Pickup") {
 			m_Crystals++;
-			Destroy (go);
+			//Destroy (go);
+			m_CrystalManager.CrystalCollected(go);
 			SpeedUp();
 		} else if (go.tag == "Trap") {
 			Debug.Log ("Collision with Trap");
