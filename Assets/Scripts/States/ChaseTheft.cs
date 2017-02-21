@@ -81,7 +81,7 @@ public class ChaseTheft : FSMState<AIInput>
 		float distanceToPlayer = Vector3.Distance (_context.m_Theft.transform.position, _context.m_Character.transform.position);
 		float distanceCrystallToPlayer = Vector3.Distance (_context.m_Theft.transform.position, nearestCrystal.transform.position);
 
-		Debug.Log (distanceToPlayer);
+		//Debug.Log (distanceToPlayer);
 
 		// If Player is very near  | TODO: Formel verbessern
 		//if ( distanceToPlayer < 9 && (minDistance + (distanceCrystallToPlayer*0.5) < distanceToPlayer)) {

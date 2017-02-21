@@ -32,7 +32,7 @@ public class ShotController : MonoBehaviour {
 			position.y = 0.4f;
 			
 			// Using thefts Trapspawn-object for positioning
-			var trapObject = Instantiate (m_Trap, theft.m_TrapSpawn.transform.position, theft.m_TrapSpawn.transform.rotation, null);
+			var trapObject = Instantiate (m_Trap, position, theft.m_TrapSpawn.transform.rotation, null);
 			TrapController trap = trapObject.GetComponent<TrapController> ();
 			trap.m_Duration = 2f;
 

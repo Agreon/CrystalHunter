@@ -5,7 +5,6 @@ namespace UnityStandardAssets.Utility
 {
 	/**
 	 * TODO: Remove unecessary stuff
-	 * 
 	 * */
 	public class CameraController : MonoBehaviour
 	{
@@ -32,9 +31,21 @@ namespace UnityStandardAssets.Utility
 		// TODO: Debug
 		[SerializeField]
 		private GameObject centerObject;
-	
-		// Use this for initialization
-		void Start() { 		
+
+		/*
+		public Color color1 = Color.red;
+		public Color color2 = Color.blue;*/
+		public Color color1 = Color.black;
+		public Color color2 = Color.black;
+		public float duration = 3.0F;
+
+		void Start(){
+		}
+
+		void Update(){
+			//float t = Mathf.PingPong(Time.time, duration) / duration;
+			//GetComponent<Camera>().backgroundColor = Color.Lerp(color1, color2, t);
+			GetComponent<Camera>().backgroundColor = Color.black;
 		}
 
 		// Update is called once per frame
@@ -59,21 +70,20 @@ namespace UnityStandardAssets.Utility
 			// Calculate Height	
 			var centerDist = Vector3.Distance(targets[0].position, target.position);
 
-
+			// Treshold height
 			var wantedHeight = target.position.y + height + (centerDist*1.8f);
 			if (wantedHeight < m_MinHeight) {
 				wantedHeight = m_MinHeight;
 			}
 
+			var position = target.position - (Vector3.forward * distance);
 
-			// Set the position of the camera on the x-z plane to:
-			// distance meters behind the target
-			transform.position = target.position - (Vector3.forward * distance);
+			// fix because of rotation
+			position.z += - (wantedHeight*0.3f);
 
-			//transform.position.z += 3;
+			// set the position of the camera
+			transform.position = new Vector3 (position.x, wantedHeight, position.z);
 
-			// Set the height of the camera
-			transform.position = new Vector3(transform.position.x ,wantedHeight , transform.position.z);
 
 
 		}

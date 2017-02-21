@@ -10,7 +10,8 @@ public abstract class Character : Trappable
 	public int m_Crystals = 0;
 	public float m_MovementSpeed = 1;
 	public float m_CurrentSpeed;
-	public float m_SpeedUpDuration = 3;
+	public float m_SpeedUpDuration = 2;
+	//TODO: SpeedUpMultiplier
 	
 	private float m_SpeedUpCounter;
 
@@ -52,18 +53,14 @@ public abstract class Character : Trappable
 		}
 		
 		// End Speed Up
-		if(m_SpeedUpCounter >= m_SpeedUpDuration) {
+		if(m_SpeedUpCounter > 0 && m_SpeedUpCounter >= m_SpeedUpDuration) {
 			m_CurrentSpeed = m_MovementSpeed;
+			m_SpeedUpCounter = 0;
+			Debug.Log ("SpeedEnd");
 		}
-		
-		/* if (m_Trapped) {
-			m_Animator.SetFloat ("Forward", 0, 0.2f, Time.deltaTime);
-			m_Animator.SetFloat ("Turn", 0, 0.2f, Time.deltaTime);
-			return;
-		} */
-		
-		move *= m_CurrentSpeed;
-		
+
+		//move *= m_CurrentSpeed;
+				
 		// convert the world relative moveInput vector into a local-relative
 		// turn amount and forward amount required to head in the desired
 		// direction.
@@ -74,6 +71,9 @@ public abstract class Character : Trappable
 		m_TurnAmount = Mathf.Atan2(move.x, move.z);
 		m_ForwardAmount = move.z;
 
+		m_ForwardAmount *= m_CurrentSpeed;
+
+
 		ApplyExtraTurnRotation();
 
 		// send input and other state parameters to the animator
@@ -83,6 +83,7 @@ public abstract class Character : Trappable
 	public void SpeedUp(){
 		m_CurrentSpeed = m_MovementSpeed*1.5f;
 		m_SpeedUpCounter = 0;
+		Debug.Log ("SpeedUp");
 	}
 
 
@@ -133,7 +134,7 @@ public abstract class Character : Trappable
 		// this allows us to modify the positional speed before it's applied.
 		if (Time.deltaTime > 0)
 		{
-			Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
+			Vector3 v = (m_Animator.deltaPosition * m_CurrentSpeed) / Time.deltaTime;
 			// we preserve the existing y part of the current velocity.
 			v.y = m_Rigidbody.velocity.y;
 			m_Rigidbody.velocity = v;

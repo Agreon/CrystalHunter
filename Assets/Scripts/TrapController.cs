@@ -11,8 +11,10 @@ public class TrapController : MonoBehaviour {
 	private Trappable m_TrappedObject;
 	private Animator m_Animator;
 
-	public void Start() {
+	void Start() {
 		m_Animator = GetComponentInChildren<Animator>();
+		Debug.Log ("Started TrapCtrl");
+		Debug.Log (m_Animator);
 	}
 
 	public void Trigger(Trappable trappable) {
@@ -22,6 +24,11 @@ public class TrapController : MonoBehaviour {
 		}
 		
 		m_IsTriggered = true;
+
+		// TODO: Don't know why 'Trigger' is started faster than 'Start'
+		if (!m_Animator) {
+			m_Animator = GetComponentInChildren<Animator>();
+		}
 
 		m_Animator.SetBool ("Triggered", true);
 
