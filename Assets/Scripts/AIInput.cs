@@ -20,15 +20,12 @@ public class AIInput : MonoBehaviour {
 
 		m_CrystalManager = Object.FindObjectOfType<CrystalManager>();
 
-		// the initial state has to be passed to the constructor
 		m_Machine = new FSM<AIInput>( this, new ChaseTheft() );
 
-		// we can now add any additional states
 		m_Machine.addState( new CollectCrystal() );
 	}
 
 	void Update() {
-		// update the state machine
 		m_Machine.update( Time.deltaTime );
 	}
 }

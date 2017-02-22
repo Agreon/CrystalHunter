@@ -164,6 +164,10 @@ public abstract class Character : Trappable
 			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 		}
 	}
+
+	public int GetCrystals(){
+		return m_Crystals;
+	}
 		
 	public abstract void Action();
 	public abstract void OnCollisionEnter(Collision collision); 

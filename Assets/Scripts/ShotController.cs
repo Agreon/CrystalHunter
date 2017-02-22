@@ -18,42 +18,69 @@ public class ShotController : MonoBehaviour {
 		
 	}
 
+	private void CatchTheft(Theft theft){
+		Debug.Log ("Hit theft");
+
+		var position = theft.m_TrapSpawn.transform.position;
+		position.y = 0.4f;
+
+		// Using thefts Trapspawn-object for positioning
+		var trapObject = Instantiate (m_Trap, position, theft.m_TrapSpawn.transform.rotation, null);
+		TrapController trap = trapObject.GetComponent<TrapController> ();
+
+		trap.Trigger(theft);
+
+		Destroy (this.gameObject);
+	}
+
+	private void CollideWall(Vector3 wallNormal){
+		wallNormal.y = -0.65f;
+		transform.rotation = Quaternion.LookRotation(wallNormal);
+		GetComponent<Rigidbody>().velocity = wallNormal * 5;
+	}
+
+	private void SpawnWall(Vector3 position){
+		position.y = -0.8f;
+		Instantiate (m_SpawnObject, position, Quaternion.identity, null);
+
+		Destroy(this.gameObject);
+	}
 
 	public void OnCollisionEnter(Collision collision){
 
 		var go = collision.gameObject;
 
 		if (go.tag == "Theft") {
-
-			Debug.Log ("Hit theft");
-
 			var theft = go.GetComponent<Theft> ();
-			var position = theft.m_TrapSpawn.transform.position;
-			position.y = 0.4f;
-			
-			// Using thefts Trapspawn-object for positioning
-			var trapObject = Instantiate (m_Trap, position, theft.m_TrapSpawn.transform.rotation, null);
-			TrapController trap = trapObject.GetComponent<TrapController> ();
-			trap.m_Duration = 2f;
-
-			trap.Trigger(theft);
-
-			Destroy (this.gameObject);
-
+			CatchTheft (theft);
 		} else if (go.tag == "Wall") {
-			   Vector3 collNormal = collision.contacts[0].normal;
-			   collNormal.y = -0.65f;
-				transform.rotation = Quaternion.LookRotation(collNormal);
-			   GetComponent<Rigidbody>().velocity = collNormal * 5;		
-			   
+			CollideWall (collision.contacts[0].normal);
 		} else if (go.tag == "Ground") {
-			// Spawn Wall
-			var position = transform.position;
-			position.y = -0.8f;
 			
-			Instantiate (m_SpawnObject, position, Quaternion.identity, null);
-			
-			Destroy(this.gameObject);
+			Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2f);
+
+			for (int i = 0; i < hitColliders.Length; i++) {
+				if (hitColliders [i].gameObject.tag == "Theft") {
+					Debug.Log ("Thorugh area");
+					CatchTheft (hitColliders[i].gameObject.GetComponent<Theft>());
+					return;
+				}
+			}
+
+			/*var theft = FindObjectOfType<Theft>();
+			var distance = Vector3.Distance (transform.position, theft.transform.position);
+
+			Debug.Log ("distance");
+			Debug.Log (distance);
+
+			// If theft near, spawn trap
+			if (distance < 3.3) {
+				CatchTheft (theft);
+				return;
+			}*/
+
+			// Otherwise, spawn Wall
+			SpawnWall (transform.position);
 		}
 	}
 

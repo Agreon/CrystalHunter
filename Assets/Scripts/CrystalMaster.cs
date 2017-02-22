@@ -28,6 +28,7 @@ public class CrystalMaster : Character {
 			trap.Trigger (this);
 		} else if (go.tag == "Theft") {
 			m_Animator.Play ("Punch");
+		
 			var theft = go.GetComponent<Theft> ();
 			theft.Kill ();
 			/**

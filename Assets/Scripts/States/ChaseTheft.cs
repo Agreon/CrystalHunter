@@ -48,8 +48,9 @@ public class ChaseTheft : FSMState<AIInput>
 			// Only shoot with chance
 			if(Random.Range(0,100) < m_ShootChance) {		
 			Debug.Log("Shoot");
-			
-			// TODO: Rotate to player?
+		
+				// TODO: Not good?
+				//_context.m_Character.transform.rotation = Quaternion.LookRotation (_context.m_Theft.transform.position);
 
 			 _context.m_Character.Action();
 			 return;

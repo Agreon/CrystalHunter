@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 
 Project("{F53ECD8C-6AA2-C50F-F20F-B24F7706696B}") = "CrystalHunter", "Assembly-CSharp.csproj", "{3C1F0812-7A98-7C36-7155-35757B88F234}"
 EndProject
+Project("{F53ECD8C-6AA2-C50F-F20F-B24F7706696B}") = "CrystalHunter", "Assembly-CSharp-Editor.csproj", "{62DE3EC4-FDBA-B37C-A773-5E8C4F9D11BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{3C1F0812-7A98-7C36-7155-35757B88F234}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C1F0812-7A98-7C36-7155-35757B88F234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C1F0812-7A98-7C36-7155-35757B88F234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62DE3EC4-FDBA-B37C-A773-5E8C4F9D11BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62DE3EC4-FDBA-B37C-A773-5E8C4F9D11BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62DE3EC4-FDBA-B37C-A773-5E8C4F9D11BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62DE3EC4-FDBA-B37C-A773-5E8C4F9D11BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
