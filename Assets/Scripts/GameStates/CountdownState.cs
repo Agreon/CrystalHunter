@@ -11,23 +11,8 @@ public class CountdownState : FSMState<GameManager>
 	private Text m_CountdownText;
 
 	public override void begin() {
-
-		/**
-		 * Set Inputs usw 
-		 * Check if MP
-		 * */
-		/*if (_context.playerTheft ()) {
-		} else {
-		}*/
-
 		m_CountdownText = GameObject.Find("CountdownText").GetComponent<Text>();
 		m_CountdownText.enabled = true;
-
-		_context.m_CurrentChar = FindObjectOfType<Theft> ();
-	}
-
-	public override void reason() {
-	
 	}
 		
 	public void shutdown(){

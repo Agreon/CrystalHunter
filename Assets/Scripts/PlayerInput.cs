@@ -2,12 +2,11 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Characters.ThirdPerson
-{
+
     [RequireComponent(typeof (Character))]
     public class PlayerInput : MonoBehaviour
     {
-      	public bool secondPlayer = false;
+      	public bool _secondPlayer = false;
       
         private Character m_Character; 
 
@@ -38,4 +37,4 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Character.Move(move);
         }
     }
-}
+

@@ -6,11 +6,9 @@ namespace UnityStandardAssets.Utility
 
 	public class CameraController : MonoBehaviour
 	{
-		/*
-		public Color color1 = Color.red;
-		public Color color2 = Color.blue;*/
-		public Color m_ColorStandart = new Color (57 / 255, 0, 0);
-		public Color m_ColorMetal = new Color (57 / 255, 0, 0);
+
+		public Color m_ColorStandart = new Color (22 / 255, 0, 0);
+		public Color m_ColorMetal = new Color (41 / 255, 0, 0);
 
 //		public float duration = 3.0F;
 

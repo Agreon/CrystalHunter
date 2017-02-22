@@ -10,6 +10,13 @@ public class GameManager : MonoBehaviour {
 
 	public Character m_CurrentChar;
 
+	public int m_CurrentRound = 0;
+	public int[] m_Rounds;
+	
+	
+	// Temp
+	public bool m_GameOver = false;
+
 	// Use this for initialization
 	void Start () {
 		// https://docs.unity3d.com/ScriptReference/PlayerPrefs.html
@@ -19,15 +26,18 @@ public class GameManager : MonoBehaviour {
 			reader.close();
 		}
 		*/
+		m_Rounds = new int[2];
 
 		m_Machine = new FSM<GameManager>( this, new IntroState() );
 
 		m_Machine.addState( new CountdownState() );
 		m_Machine.addState( new PlayState() );
+		m_Machine.addState( new ScoreState() );
 	}
 
 	void Update() {
 		// update the state machine
 		m_Machine.update( Time.deltaTime );
 	}
+	
 }

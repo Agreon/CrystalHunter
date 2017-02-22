@@ -73,9 +73,26 @@ Catch-Another / Each other
 		+ Theft
 			+ Action is buggy
 		
+		+ Kristall
+			+ OnCollision mit Hindernis destroy!
+			+ Reflection einbauen?
+				+ smoothness attribut
+
+
+		+ CrystalMaster
+			+ On PlayerColl
+				+ Turn to player
+				+ oder nur, wenn wirklich zu spieler gerichtet
+				+ Vektor-Ausrichtung (Dot-Produkt?)
+				+ Theft-Look-At-Golem
+				+ Golem-Look-At
 
 		+ Animationen
 			+ Wenn gefangen
+
+		
+
+		+ UnityEvent klappt nicht 
 
 		+ Code-Architektur
 			+ Manager
@@ -85,23 +102,9 @@ Catch-Another / Each other
 				+ Spiel gewonnen
 				+ punktemanagement
 				+ rundenmanagement
-					+ rounds[0/1] Set points at currentRound
-				+ Zeitmanagement
-					+ if newTime > time
-						+ set ui
-			+ (ItemManager)
-				+ kümmert sich darum, dass items gespawned werden
-				+ calculated an standart-stellen
-				+ wie checkt man ob aktuelle stelle belegt ist?
-
-			
-			+ Ki ist einmal Master, einmal Theft
-				+ so hängen die statemachines und mit den Objekten zusammen
-			+ Player ist einmal Movement
-				+ Jeweils einmal 
-			
-			# Neue strukt
-				+ 
+					+ rounds[0/1] Set points at currentRound?
+					=> Dann muss nicht überprüft werden, welche runde gerade ist?
+				
 				
 			AIInput
 			

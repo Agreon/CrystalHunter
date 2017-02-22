@@ -53,7 +53,7 @@ public class ShotController : MonoBehaviour {
 		if (go.tag == "Theft") {
 			var theft = go.GetComponent<Theft> ();
 			CatchTheft (theft);
-		} else if (go.tag == "Wall") {
+		} else if (go.tag == "Wall" || go.tag == "CrystalWall") {
 			CollideWall (collision.contacts[0].normal);
 		} else if (go.tag == "Ground") {
 			

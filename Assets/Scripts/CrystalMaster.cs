@@ -4,7 +4,7 @@ using System.Collections;
 public class CrystalMaster : Character {
 
 
-	[SerializeField]public int m_ShotSpeed = 5;
+	[SerializeField]public int m_ShotSpeed = 7;
 	[SerializeField]public GameObject m_CrystalShot;
 	[SerializeField]public GameObject m_ShotSpawn;
 
@@ -31,12 +31,15 @@ public class CrystalMaster : Character {
 		
 			var theft = go.GetComponent<Theft> ();
 			theft.Kill ();
-			/**
-			 * Win-Game
-			 */
+			
+			StartCoroutine(WinGame());
 		}
-
-
+	}
+	
+	IEnumerator WinGame(){
+		yield return new WaitForSeconds(2);
+		GameManager gm = FindObjectOfType<GameManager>(); 
+		gm.m_GameOver = true;
 	}
 		
 	/**
@@ -50,8 +53,6 @@ public class CrystalMaster : Character {
 		m_Crystals = 0;
 
 		m_Animator.Play ("Shoot");
-
-		// Rotation in character rot
 
 		GameObject shot = Instantiate (m_CrystalShot, m_ShotSpawn.transform.position, transform.rotation, null);
 

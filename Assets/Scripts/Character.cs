@@ -8,6 +8,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public abstract class Character : Trappable
 {
 	public int m_Crystals = 0;
+	public int m_CrystalLoads = 0;
 	public float m_MovementSpeed = 1;
 	public float m_CurrentSpeed;
 	public float m_SpeedUpDuration = 2;
@@ -167,6 +168,10 @@ public abstract class Character : Trappable
 
 	public int GetCrystals(){
 		return m_Crystals;
+	}
+		
+	public int GetCrystalLoads(){
+		return m_CrystalLoads;
 	}
 		
 	public abstract void Action();

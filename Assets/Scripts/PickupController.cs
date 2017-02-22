@@ -11,6 +11,7 @@ public class PickupController : MonoBehaviour
 	}
 		
 	public void OnCollisionEnter(Collision collision) {
+		Debug.Log("CRYSTAL-COLL");
 		manager.CrystalCollected (this.gameObject);
 	}
 }

@@ -6,12 +6,10 @@ public class Theft : Character {
 
 	[SerializeField]public GameObject m_Trap;
 	[SerializeField]public GameObject m_TrapSpawn;
-	[SerializeField]public UnityEvent m_GameOverEvent;
 
 	// Start Animation "Die"
 	public void Kill() {
 		m_Animator.Play("Die");
-		m_GameOverEvent.Invoke ();
 	}
 	
 	/**
@@ -23,7 +21,9 @@ public class Theft : Character {
 
 		if (go.tag == "Pickup") {
 			m_Crystals++;
-			//Destroy (go);
+			if(m_CrystalLoads < 3) {
+				m_CrystalLoads++;			
+			}
 			m_CrystalManager.CrystalCollected (go);
 			SpeedUp ();
 		} /*else if (go.tag == "CrystalWall") {
@@ -56,17 +56,25 @@ public class Theft : Character {
 		}
 
 		// If not enough crystals
-		if (m_Crystals < 3) {
+		if (m_CrystalLoads < 3) {
 			Debug.Log ("Not enough crystals");
 			return;
 		}
 
-		m_Crystals = 0;
+		m_CrystalLoads = 0;
 
 		var spawnPos = m_TrapSpawn.transform.position;
-		spawnPos.y = 0.4f;	// TODO: Remove
+		spawnPos.y = 0.4f;	// TODO: Remove through inital good start
+		
 
+		
 		GameObject trap = Instantiate (m_Trap, spawnPos, m_TrapSpawn.transform.rotation, null);
+
+		// Hide Trap in Multiplayer
+		if(GlobalConfig.MULTIPLAYER){
+			// TODO: Show info
+			//trap.transform.Find("Hint").GetComponent<Renderer>().enabled = false;
+		}
 
 		m_Animator.Play("Crouch");
 
