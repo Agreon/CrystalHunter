@@ -20,6 +20,9 @@ public class PlayState : FSMState<GameManager>
 		m_Theft = FindObjectOfType<Theft> ();
 		m_CrystalMaster = FindObjectOfType<CrystalMaster> ();		
 
+		// TODO: Enable CrystalManager (Should be Singleton)
+
+
 		// Enable Input
 		if(GlobalConfig.MULTIPLAYER) {
 			// First Round
@@ -79,8 +82,13 @@ public class PlayState : FSMState<GameManager>
 		
 		int minutes = (int)time/60;
 		int seconds = (int)time%60;
-		
-		retTime = minutes.ToString() + ":" + seconds.ToString(); 
+
+		string secondsStr = seconds.ToString();
+		if (secondsStr.Length < 2) {
+			secondsStr = "0" + secondsStr;
+		}
+
+		retTime = minutes.ToString() + ":" + secondsStr; 
 		
 		return retTime;
 	}
@@ -103,6 +111,14 @@ public class PlayState : FSMState<GameManager>
 			}
 			else {
 				m_CrystalLoads[i].GetComponent<Renderer>().enabled = true;
+			}
+
+			if (crystalLoads == 3) {
+				//m_CrystalLoads [i].GetComponent<Animator> ().enabled = true;
+				//m_CrystalLoads [i].GetComponent<Animator> ().Play ("CrystalLight");
+				m_CrystalLoads [i].GetComponent<Animator> ().SetBool ("StartLight",false);
+			} else if (crystalLoads == 0) {
+				//m_CrystalLoads [i].GetComponent<Animator> ().enabled = false;
 			}
 		}
 		

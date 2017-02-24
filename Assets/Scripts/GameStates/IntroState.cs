@@ -26,8 +26,8 @@ public class IntroState : FSMState<GameManager>
 	}
 
 	public override void update( float deltaTime ) {
-		// OnSpace 'startGame'
-		if (Input.GetKeyUp (KeyCode.Space)) {
+		// OnKey 'startGame'
+		if (Input.anyKey) {
 			startGame ();
 		}
 	}

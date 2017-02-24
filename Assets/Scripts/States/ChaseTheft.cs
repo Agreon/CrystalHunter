@@ -42,8 +42,8 @@ public class ChaseTheft : FSMState<AIInput>
 			} 
 		}
 
-		// Shoot at player
-		if(canSeeTheft && _context.m_Character.m_Crystals >= 3) {
+		// Shoot at player TODO: TEMP
+		if(canSeeTheft && _context.m_Character.m_CrystalLoads == 3) {
 			
 			// Only shoot with chance
 			if(Random.Range(0,100) < m_ShootChance) {		
@@ -58,11 +58,11 @@ public class ChaseTheft : FSMState<AIInput>
 			
 		} 
 
-	
-		List<GameObject> crystals = _context.m_CrystalManager.getCrystals ();
+
+		List<GameObject> crystals = CrystalManager.instance.getCrystals ();
 
 		// Abort if we got enough crystals or there are no to find
-		if (_context.m_Character.m_Crystals >= 3 || crystals.Count == 0) {
+		if (_context.m_Character.m_CrystalLoads >= 3 || crystals.Count == 0) {
 			return;
 		}
 
