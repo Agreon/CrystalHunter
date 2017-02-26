@@ -10,7 +10,7 @@ public class Popup : MonoBehaviour
 	private float m_Counter;
 	private float m_ShowTime;
 
-	void Start(){
+	void Awake(){
 		m_TextHeader = transform.Find ("HeaderText").GetComponent<Text>();
 		m_MainText = transform.Find ("MainText").GetComponent<Text>();
 	}

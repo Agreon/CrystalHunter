@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AI.FiniteStateMachine
 {
-	public abstract class FSMState<T> : MonoBehaviour{
+	public abstract class FSMState<T>/* : MonoBehaviour*/ {
 		protected FSM<T> _machine;
 		protected T _context;
 

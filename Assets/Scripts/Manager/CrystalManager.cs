@@ -8,12 +8,14 @@ public class CrystalManager : MonoBehaviour {
 
 	[SerializeField] public GameObject m_CrystalPickup;
 	[SerializeField] public GameObject m_CrystalSpawns;
+	[SerializeField] public GameObject m_ObjectContainer;
 	[SerializeField] public int m_MaxCrystals;
 	[SerializeField] public int m_CrystalSpawnRate = 3;
 
 	private List<GameObject> m_Crystals = new List<GameObject>();
 
 	private int m_SpawnPosAmount = 0;
+	private bool m_Spawning = false;
 
 	void Awake(){
 		if (instance == null) {
@@ -32,7 +34,7 @@ public class CrystalManager : MonoBehaviour {
 
 
 	void Update(){
-		if (m_Crystals.Count < m_MaxCrystals) {
+		if (m_Spawning && m_Crystals.Count < m_MaxCrystals) {
 			int r = Random.Range (0, 1000);
 			if (r <= m_CrystalSpawnRate) {
 				SpawnCrystal ();
@@ -46,6 +48,10 @@ public class CrystalManager : MonoBehaviour {
 	public void CrystalCollected(GameObject crystal) {
 		m_Crystals.Remove (crystal);
 		Destroy (crystal);
+	}
+
+	public void clear(){
+		m_Crystals = new List<GameObject>();
 	}
 		
 	void SpawnCrystal(){
@@ -64,7 +70,7 @@ public class CrystalManager : MonoBehaviour {
 			}
 		}
 			
-		var crystal = Instantiate(m_CrystalPickup, spawnAt, Quaternion.LookRotation(new Vector3(1,0,0)));
+		var crystal = Instantiate(m_CrystalPickup, spawnAt, Quaternion.LookRotation(new Vector3(1,0,0)), m_ObjectContainer.transform);
 
 		m_Crystals.Add (crystal);
 	
@@ -72,6 +78,14 @@ public class CrystalManager : MonoBehaviour {
 
 	public List<GameObject> getCrystals() {
 		return m_Crystals;
+	}
+
+	public void enable(){
+		m_Spawning = true;
+	}
+
+	public void disable(){
+		m_Spawning = false;
 	}
 
 }

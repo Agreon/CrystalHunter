@@ -26,6 +26,11 @@ public class MenuManager : MonoBehaviour {
 
 	public void toggleMetalMode(bool toggled){
 		GlobalConfig.METAL_MODE = toggled;
+		if (toggled) {
+			AudioManager.instance.Play (false, "Sylosis");
+		} else {
+			AudioManager.instance.Play (true, null);
+		}
 	}
 
 	public void ExitGame(){

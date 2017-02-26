@@ -7,6 +7,7 @@ public class Shot : MonoBehaviour {
 
 	public GameObject m_Trap;
 	public GameObject m_SpawnObject;
+	public GameObject m_ObjectContainer;
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +26,7 @@ public class Shot : MonoBehaviour {
 		position.y = 0.4f;
 
 		// Using thefts Trapspawn-object for positioning
-		var trapObject = Instantiate (m_Trap, position, theft.m_TrapSpawn.transform.rotation, null);
+		var trapObject = Instantiate (m_Trap, position, theft.m_TrapSpawn.transform.rotation, m_ObjectContainer.transform);
 		Trap trap = trapObject.GetComponent<Trap> ();
 
 		trap.Trigger(theft);
@@ -41,7 +42,7 @@ public class Shot : MonoBehaviour {
 
 	private void SpawnWall(Vector3 position){
 		position.y = -0.8f;
-		Instantiate (m_SpawnObject, position, Quaternion.identity, null);
+		Instantiate (m_SpawnObject, position, Quaternion.identity, m_ObjectContainer.transform);
 
 		Destroy(this.gameObject);
 	}

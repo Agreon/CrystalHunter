@@ -1,26 +1,27 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using AI.FiniteStateMachine;
 
 public class IntroState : FSMState<GameManager>
 {
-	private GameObject m_IntroView;
+	private Text m_ConfirmText;
 
 	/**
 	 * Get UI-Compos, enable them 
 	 **/
 	public override void begin() {
-		m_IntroView = GameObject.Find ("IntroductionView");
-		m_IntroView.gameObject.SetActive (true);
+		m_ConfirmText = GameObject.Find ("ConfirmText").GetComponent<Text> ();
+		m_ConfirmText.enabled = true;
 	}
 
 	// Switches to the Countdown
 	public void startGame() {
 
-		/**
-		 * Disable UI
-		 * */
-		m_IntroView.gameObject.SetActive (false);
+		Debug.Log ("StartGame");
+
+		// Disable UI
+		m_ConfirmText.enabled = false;
 
 		_machine.changeState<CountdownState>();
 	}
@@ -28,6 +29,7 @@ public class IntroState : FSMState<GameManager>
 	public override void update( float deltaTime ) {
 		// OnKey 'startGame'
 		if (Input.anyKey) {
+			Debug.Log ("AnyKey");
 			startGame ();
 		}
 	}

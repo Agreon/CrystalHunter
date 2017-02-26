@@ -7,6 +7,7 @@ public class CrystalMaster : Character {
 	[SerializeField]public int m_ShotSpeed = 7;
 	[SerializeField]public GameObject m_CrystalShot;
 	[SerializeField]public GameObject m_ShotSpawn;
+	[SerializeField]public GameObject m_ObjectContainer;
 
 	/**
 	 * Checks collision with other gameObjects
@@ -39,7 +40,7 @@ public class CrystalMaster : Character {
 	}
 	
 	IEnumerator WinGame(){
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(1);
 		GameManager.instance.m_GameOver = true;
 	}
 		
@@ -57,7 +58,7 @@ public class CrystalMaster : Character {
 
 		m_Animator.Play ("Shoot");
 
-		GameObject shot = Instantiate (m_CrystalShot, m_ShotSpawn.transform.position, transform.rotation, null);
+		GameObject shot = Instantiate (m_CrystalShot, m_ShotSpawn.transform.position, transform.rotation, m_ObjectContainer.transform);
 
 		Physics.IgnoreCollision(shot.GetComponent<Collider>(), GetComponent<Collider>());
 		shot.GetComponent<Rigidbody>().velocity = transform.forward * m_ShotSpeed;		

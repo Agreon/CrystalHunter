@@ -13,15 +13,16 @@ public class PlayState : FSMState<GameManager>
 	private Text m_TimeText;
 	private Text m_CrystalText;
 	
-	private GameObject[] m_CrystalLoads;
+	private GameObject[] m_TheftCrystalLoads;
+	private GameObject[] m_CMCrystalLoads;
+
 	
 	public override void begin() {
 		
-		m_Theft = FindObjectOfType<Theft> ();
-		m_CrystalMaster = FindObjectOfType<CrystalMaster> ();		
+		m_Theft = Object.FindObjectOfType<Theft> ();
+		m_CrystalMaster = Object.FindObjectOfType<CrystalMaster> ();		
 
-		// TODO: Enable CrystalManager (Should be Singleton)
-
+		_context.m_GameOver = false;
 
 		// Enable Input
 		if(GlobalConfig.MULTIPLAYER) {
@@ -50,48 +51,62 @@ public class PlayState : FSMState<GameManager>
 			m_CrystalMaster.GetComponent<AIInput>().enabled = true;
 		}
 
-		// Enable UI
+		// Reset Chars
+		m_Theft.transform.position = new Vector3(-5,3.5f,10.9f);
+		m_Theft.transform.rotation = Quaternion.Euler(new Vector3(0,90,0));
+		m_Theft.GetComponent<Animator> ().Play ("Grounded");
 
+		m_CrystalMaster.transform.position = new Vector3(5,3.35f,10.9f);
+		m_CrystalMaster.transform.rotation = Quaternion.Euler(new Vector3(0,-90,0));
+		m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
+
+		// Clear temp objects
+		var ObjectContainer = GameObject.Find ("ObjectContainer");
+		foreach (Transform child in ObjectContainer.transform) {
+			GameObject.Destroy(child.gameObject);
+		}
+		CrystalManager.instance.clear ();
+
+		// Enable UI
 		m_TimeText = GameObject.Find("CurrentTimetext").GetComponent<Text>();
 		m_TimeText.enabled = true;
 
 		m_CrystalText = GameObject.Find ("Crystaltext").GetComponent<Text> ();
 		m_CrystalText.enabled = true;
 
-		m_CrystalLoads = new GameObject[3];
-		
-		m_CrystalLoads[0] = GameObject.Find ("CrystalLoad1");
-		m_CrystalLoads[1] = GameObject.Find ("CrystalLoad2");
-		m_CrystalLoads[2] = GameObject.Find ("CrystalLoad3");
+		m_TheftCrystalLoads = new GameObject[3];
+		var theftCrystalContainer = GameObject.Find ("TheftCrystalLoads");
+		for (int i = 0; i < theftCrystalContainer.transform.childCount; i++) {
+			m_TheftCrystalLoads [i] = theftCrystalContainer.transform.GetChild(i).gameObject;
+		}
+
+		m_CMCrystalLoads = new GameObject[3];
+		var CMCrystalContainer = GameObject.Find ("CMCrystalLoads");
+		for (int i = 0; i < CMCrystalContainer.transform.childCount; i++) {
+			m_CMCrystalLoads [i] = CMCrystalContainer.transform.GetChild(i).gameObject;
+		}
+			
+		CrystalManager.instance.enable();
 	}
-		
-	public void shutdown(){
+
+	void shutdown(){
 		m_TimeText.enabled = false;
 		m_CrystalText.enabled = false;
 
 		m_Theft.GetComponent<PlayerInput>().enabled = false;
 		m_CrystalMaster.GetComponent<PlayerInput>().enabled = false;
 		m_CrystalMaster.GetComponent<AIInput>().enabled = false;
-	}
-	
-	/**
-		Parses float-time to Minutes 
-	**/
-	public string parseTime(float time){
-		string retTime = "";
-		
-		int minutes = (int)time/60;
-		int seconds = (int)time%60;
 
-		string secondsStr = seconds.ToString();
-		if (secondsStr.Length < 2) {
-			secondsStr = "0" + secondsStr;
+		for (int i = 0; i < 3; i++) {
+			m_TheftCrystalLoads[i].GetComponent<Renderer>().enabled = false;
+		}
+		for (int i = 0; i < 3; i++) {
+			m_CMCrystalLoads[i].GetComponent<Renderer>().enabled = false;
 		}
 
-		retTime = minutes.ToString() + ":" + secondsStr; 
-		
-		return retTime;
+		CrystalManager.instance.disable ();
 	}
+		
 
 	public override void update( float deltaTime ) {
 
@@ -107,31 +122,73 @@ public class PlayState : FSMState<GameManager>
 		
 		for(int i = 0; i < 3; i++){
 			if(i >= crystalLoads){
-				m_CrystalLoads[i].GetComponent<Renderer>().enabled = false;
+				m_TheftCrystalLoads[i].GetComponent<Renderer>().enabled = false;
 			}
 			else {
-				m_CrystalLoads[i].GetComponent<Renderer>().enabled = true;
+				m_TheftCrystalLoads[i].GetComponent<Renderer>().enabled = true;
 			}
 
 			if (crystalLoads == 3) {
 				//m_CrystalLoads [i].GetComponent<Animator> ().enabled = true;
 				//m_CrystalLoads [i].GetComponent<Animator> ().Play ("CrystalLight");
-				m_CrystalLoads [i].GetComponent<Animator> ().SetBool ("StartLight",false);
+				m_TheftCrystalLoads [i].GetComponent<Animator> ().SetBool ("StartLight",false);
 			} else if (crystalLoads == 0) {
 				//m_CrystalLoads [i].GetComponent<Animator> ().enabled = false;
 			}
 		}
-		
+
+		// Show CM CrystalLoads
+		if (GlobalConfig.MULTIPLAYER) {
+
+			int CMCrystalLoads = m_CrystalMaster.GetCrystalLoads();
+
+			for(int i = 0; i < 3; i++){
+				if(i >= CMCrystalLoads){
+					m_CMCrystalLoads[i].GetComponent<Renderer>().enabled = false;
+				}
+				else {
+					m_CMCrystalLoads[i].GetComponent<Renderer>().enabled = true;
+				}
+
+				if (CMCrystalLoads == 3) {
+					//m_CrystalLoads [i].GetComponent<Animator> ().enabled = true;
+					//m_CrystalLoads [i].GetComponent<Animator> ().Play ("CrystalLight");
+					m_CMCrystalLoads [i].GetComponent<Animator> ().SetBool ("StartLight",false);
+				} else if (CMCrystalLoads == 0) {
+					//m_CrystalLoads [i].GetComponent<Animator> ().enabled = false;
+				}
+			}
+		}
+
+		// Not-so-beautiful workaround, bc unityevent did not work
 		if(_context.m_GameOver){
-			Debug.Log(_context.m_CurrentRound);
 			GameOver();
 		}
 	}
 
-	public void GameOver(){
-		Debug.Log("GAMEOVER");
-		
-		_context.m_Rounds[_context.m_CurrentRound] = m_Theft.GetCrystals();
+	/**
+		Parses float-time to Minutes 
+	**/
+	string parseTime(float time){
+		string retTime = "";
+
+		int minutes = (int)time/60;
+		int seconds = (int)time%60;
+
+		string secondsStr = seconds.ToString();
+		if (secondsStr.Length < 2) {
+			secondsStr = "0" + secondsStr;
+		}
+
+		retTime = minutes.ToString() + ":" + secondsStr; 
+
+		return retTime;
+	}
+
+	void GameOver(){
+
+		// Save Points
+		_context.m_Rounds[_context.m_CurrentRound] = m_Theft.GetCrystals() + ((int)m_PlayTime/2); 
 		
 		shutdown();
 	

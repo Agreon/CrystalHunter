@@ -44,8 +44,6 @@ public abstract class Character : Trappable
 
 	public void Move(Vector3 move)
 	{
-
-		
 		// If Speeded Up
 		if(m_CurrentSpeed != m_MovementSpeed) {
 			m_SpeedUpCounter += Time.deltaTime;	
@@ -57,9 +55,7 @@ public abstract class Character : Trappable
 			m_SpeedUpCounter = 0;
 			Debug.Log ("SpeedEnd");
 		}
-
-		//move *= m_CurrentSpeed;
-				
+	
 		// convert the world relative moveInput vector into a local-relative
 		// turn amount and forward amount required to head in the desired
 		// direction.
@@ -71,7 +67,6 @@ public abstract class Character : Trappable
 		m_ForwardAmount = move.z;
 
 		m_ForwardAmount *= m_CurrentSpeed;
-
 
 		ApplyExtraTurnRotation();
 

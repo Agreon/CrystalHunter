@@ -7,21 +7,63 @@ using AI.FiniteStateMachine;
 public class ScoreState : FSMState<GameManager>
 {
 	private Text m_ScoreText;
+	private Text m_Player1Score;
+	private Text m_Player2Score;
+	private Text m_WinnerText;
+	private Text m_ContinueText;
+
 
 	public override void begin() {
+		
 		m_ScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
+		m_Player1Score = GameObject.Find("Player1Score").GetComponent<Text>();
+		m_Player2Score = GameObject.Find("Player2Score").GetComponent<Text>();
+		m_WinnerText = GameObject.Find("WinnerText").GetComponent<Text>();
+		m_ContinueText = GameObject.Find("ContinueText").GetComponent<Text>();
 		
 		if(GlobalConfig.MULTIPLAYER){
-			// TODO: Show Both Scores and who won
-		
+			// Show single score
+			if (_context.m_CurrentRound == 0) {
+
+				m_Player1Score.enabled = true;
+				m_ContinueText.enabled = true;
+
+				m_Player1Score.text = "Player 1: " + _context.m_Rounds [0].ToString ();
+				m_ContinueText.text = "Press a key to continue!";
+
+				_context.m_GameOver = false;
+			// Show both scores
+			} else {
+
+				m_Player1Score.enabled = true;
+				m_Player2Score.enabled = true;
+				m_WinnerText.enabled = true;
+
+				m_Player1Score.text = "Player 1: " + _context.m_Rounds [0].ToString ();
+				m_Player2Score.text = "Player 2: " + _context.m_Rounds [1].ToString ();
+
+				if (_context.m_Rounds [0] > _context.m_Rounds [1]) {
+					m_WinnerText.text = "Player 1 Wins!"; 
+				} else {
+					m_WinnerText.text = "Player 2 Wins!";
+				}
+			}
+				
 		} else {
-			// TODO: Vlt. mit Zeit adden
-			m_ScoreText.text = "Score: " + _context.m_Rounds[0].ToString();
+			m_ScoreText.enabled = true;
+			m_ContinueText.enabled = true;
+
+			m_ScoreText.text = "Your score is: " + _context.m_Rounds[0].ToString() + "!";
+			m_ContinueText.text = "Press a key to get to the menu!";
 		}
 	}
 		
-	public void shutdown(){
-		m_ScoreText.gameObject.SetActive(false);
+	public void shutdown() {
+		m_ScoreText.enabled = false;
+		m_ContinueText.enabled = false;
+		m_Player1Score.enabled = false;
+		m_Player2Score.enabled = false;
+		m_WinnerText.enabled = false;
 	}
 
 	public override void update( float deltaTime ) {
@@ -33,8 +75,10 @@ public class ScoreState : FSMState<GameManager>
 			if(GlobalConfig.MULTIPLAYER && _context.m_CurrentRound == 0){
 				// Return to PlayState
 				_context.m_CurrentRound = 1;
-				_machine.changeState<PlayState> ();		
+				_machine.changeState<CountdownState> ();		
 			} else {
+				_machine.changeState<IntroState> ();		
+
 				// Change to MenuScene
 				SceneManager.LoadSceneAsync("MenuScene", LoadSceneMode.Single);
 			}

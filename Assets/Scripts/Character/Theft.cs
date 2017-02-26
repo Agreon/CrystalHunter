@@ -6,6 +6,7 @@ public class Theft : Character {
 
 	[SerializeField]public GameObject m_Trap;
 	[SerializeField]public GameObject m_TrapSpawn;
+	[SerializeField]public GameObject m_ObjectContainer;
 
 	// Start Animation "Die"
 	public void Kill() {
@@ -66,8 +67,7 @@ public class Theft : Character {
 		var spawnPos = m_TrapSpawn.transform.position;
 		spawnPos.y = 0.4f;	// TODO: Remove through inital good start
 		
-
-		GameObject trap = Instantiate (m_Trap, spawnPos, m_TrapSpawn.transform.rotation, null);
+		GameObject trap = Instantiate (m_Trap, spawnPos, m_TrapSpawn.transform.rotation, m_ObjectContainer.transform);
 
 		// If in Singleplayer show a traphint
 		if(GlobalConfig.MULTIPLAYER == false){

@@ -22,9 +22,26 @@ public class GameManager : MonoBehaviour {
 	void Awake(){
 		if (instance == null) {
 			instance = this;
-		} else if (instance != this) {
+		}/* else if (instance != this) {
 			Destroy (gameObject);
-		}
+			return;
+		}*/
+		/*
+		m_Rounds = new int[2];
+
+		//m_Machine = new FSM<GameManager>( this, new PlayState() );
+		m_Machine = new FSM<GameManager>( this, new IntroState() );
+
+		m_Machine.addState( new CountdownState() );
+		m_Machine.addState( new PlayState() );
+		m_Machine.addState( new ScoreState() );*/
+		Debug.Log ("AHAHA");
+		m_Rounds = new int[2];
+		m_Machine = new FSM<GameManager>( this, new IntroState() );
+
+		m_Machine.addState( new CountdownState() );
+		m_Machine.addState( new PlayState() );
+		m_Machine.addState( new ScoreState() );
 	}
 
 	// Use this for initialization
@@ -36,13 +53,21 @@ public class GameManager : MonoBehaviour {
 			reader.close();
 		}
 		*/
-		m_Rounds = new int[2];
-
+	/*	m_Rounds = new int[2];
+		Debug.Log ("FUU");
+		//m_Machine = new FSM<GameManager>( this, new PlayState() );
 		m_Machine = new FSM<GameManager>( this, new IntroState() );
 
 		m_Machine.addState( new CountdownState() );
 		m_Machine.addState( new PlayState() );
-		m_Machine.addState( new ScoreState() );
+		m_Machine.addState( new ScoreState() );*/
+		Debug.Log ("FSM Start");
+	/*	m_Rounds = new int[2];
+		m_Machine = new FSM<GameManager>( this, new IntroState() );
+
+		m_Machine.addState( new CountdownState() );
+		m_Machine.addState( new PlayState() );
+		m_Machine.addState( new ScoreState() );*/
 	}
 
 	void Update() {
