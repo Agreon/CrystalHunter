@@ -63,22 +63,11 @@ Catch-Another / Each other
 		=> Intensity => Set
 		
 	+ TODO: 
-
-		+ Wenn Singleplayer
-			=> Show Trap?
-
-		+ UI
-			+ Aufgeladener Crystall-Animation wenn 3 gesammelt
-			
-		+ Theft
-			+ Action is buggy
-		
-		+ Kristall
-			+ OnCollision mit Hindernis destroy!
-			+ Reflection einbauen?
-				+ smoothness attribut
-
-
+		+ Multiplayer
+			+ Input 
+				+ Golem is too fast
+				=> Ugly workaround?
+					=> PlayerInput ( if ai, halbiere(0.6/07) den move-vector
 		+ CrystalMaster
 			+ On PlayerColl
 				+ Turn to player
@@ -86,68 +75,39 @@ Catch-Another / Each other
 				+ Vektor-Ausrichtung (Dot-Produkt?)
 				+ Theft-Look-At-Golem
 				+ Golem-Look-At
+			+ AI
+				+ verbessern
 
+		+ Bugs
+			+ HideMouse
+			+ SetMetalMode if already activated after game 
+			+ ExitGame
+
+		+ SoundManager
+			+ Respond to music
+			
+			+ 78,126,245
+			+ 210, 17,17
+
+
+			+ 100,53,15
+			+ DontDestroyOnReload macht die StateMachine kaputt
+			
+		+ UI
+			+ Polish ScoreScreen
+			
+			+ Aufgeladener Crystall-Animation wenn 3 gesammelt?
+			+ shininess material
+			=> Animation hinkriegen
+			=> Lowe prio
 		+ Animationen
-			+ Wenn gefangen
+			+ Goelm, Wenn gefangen
 
-		
 
-		+ UnityEvent klappt nicht 
-
-		+ Code-Architektur
-			+ Manager
-				+ Wie war das mit den States und den GameStates?
-			+ GameManager (HowTo make GameManager-init-class? => examples von leissler)
-				+ currentRound
-				+ Spiel gewonnen
-				+ punktemanagement
-				+ rundenmanagement
-					+ rounds[0/1] Set points at currentRound?
-					=> Dann muss nicht überprüft werden, welche runde gerade ist?
-				
-				
-			AIInput
-			
-				+ Character character
-				+ StateMachine
-				+ Chasing 
-					+ cast char to CrystalMaster-Class
-					+ check if crystall near
-					+ shoot if 3 crystalls 
-						+ character.action
-					+ NavMesh.setDestination();
-					+ character.move(navmesh.move);
-				+ chased
-					+ get to next crystall
-					+ character.move(navmesh.mvoe);
-			
-			=> Entkopplung macht keinen SInn, da AIInput den Char eh braucht 
-				
-				
-			GameController 
-				+ onstart 
-					+ FindObjectByTag
-					+ set CrystalMaster
-						+ disable AIInput
-						+ enable PlayerInput
-						
-					+ set Theft
-						+ disable PlayerInput
-						+ enable AIInput
-						+ AI.setRunning
-			
-			abstract CharacterCtrl
-				+ items: num;
-				+ moveSpeed
-				+ currentSpeed
-				
-				+ move-ausgeschrieben
-				+ abstract action
-				+ abstract onCollision
-			
-						
-			+ CameraController
-				+ Verbessern
+		+ Codequali
+			+ UI-CrystalLoads übergeben, nicht finden
+			+ Namespaces
+	
 	+ Bedenken. 
 		+ Nicht zu wenige Items, damit es nicht zu langweilig wird
 		+ Nicht zu viele, damit es nicht zu schnell ist.
@@ -200,6 +160,9 @@ https://github.com/allanpichardo/Unity-Beat-Detection
 + Smthg. with beat detect?
 Techno
 Liquid dnb
+https://www.youtube.com/watch?v=Tykyu1J-adk
+
+
 oder
 + too many chiefs
 + sylosis?
