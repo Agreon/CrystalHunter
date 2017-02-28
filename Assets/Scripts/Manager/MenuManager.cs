@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		Cursor.visible = true;
+		if (GlobalConfig.METAL_MODE) {
+			GameObject.Find ("MetalModeToggle").GetComponent<Toggle> ().isOn = true;
+		}
+
 	}
 	
 	// Update is called once per frame
@@ -16,7 +21,8 @@ public class MenuManager : MonoBehaviour {
 	}
 
 	public void StartSingle(){
-		SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+		GlobalConfig.MULTIPLAYER = false;
+		SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
 	}
 
 	public void StartMulti(){
@@ -27,9 +33,9 @@ public class MenuManager : MonoBehaviour {
 	public void toggleMetalMode(bool toggled){
 		GlobalConfig.METAL_MODE = toggled;
 		if (toggled) {
-			AudioManager.instance.Play (false, "Sylosis");
+			AudioManager.instance.Play (true, "Sylosis");
 		} else {
-			AudioManager.instance.Play (true, null);
+			AudioManager.instance.Play (false, null);
 		}
 	}
 

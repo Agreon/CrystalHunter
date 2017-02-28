@@ -27,26 +27,12 @@ public class Theft : Character {
 			}
 			CrystalManager.instance.CrystalCollected (go);
 			SpeedUp ();
-		} /*else if (go.tag == "CrystalWall") {
-			
-			//TODO: Check if in animation Get position
-			// Or rather check if position treshold
-
-			Debug.Log ("COLLISION");
-
-			Destroy (go);
-
-			var trapObject = Instantiate (m_Trap, m_TrapSpawn.transform.position, m_TrapSpawn.transform.rotation, null);
-			TrapController trap = trapObject.GetComponent<TrapController> ();
-			trap.m_Duration = 2f;
-
-			trap.Trigger(this);
-		}*/
+		}
 	}
 
 	/**
 		Lay Trap
-		TODO: UI-Feedback
+		TODO: UI-Feedback (ShowPopup!)
 	**/
 	public override void Action(){
 
@@ -58,7 +44,7 @@ public class Theft : Character {
 
 		// If not enough crystals
 		if (m_CrystalLoads < 3) {
-			Debug.Log ("Not enough crystals");
+			GameManager.instance.ShowNotification (true, "Not enough Crystals!");
 			return;
 		}
 

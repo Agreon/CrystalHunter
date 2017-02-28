@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using AI.FiniteStateMachine;
 
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;
+
+	public Notification m_TheftNotification;
+	public Notification m_CMNotification;
+
 
 	private FSM<GameManager> m_Machine;
 
@@ -22,10 +27,10 @@ public class GameManager : MonoBehaviour {
 	void Awake(){
 		if (instance == null) {
 			instance = this;
-		}/* else if (instance != this) {
+		} else if (instance != this) {
 			Destroy (gameObject);
 			return;
-		}*/
+		}
 		/*
 		m_Rounds = new int[2];
 
@@ -35,13 +40,19 @@ public class GameManager : MonoBehaviour {
 		m_Machine.addState( new CountdownState() );
 		m_Machine.addState( new PlayState() );
 		m_Machine.addState( new ScoreState() );*/
-		Debug.Log ("AHAHA");
+
+		//SceneManager.UnloadSceneAsync (SceneManager.GetSceneByName ("MenuScene"));
+		//SceneManager.SetActiveScene (SceneManager.GetSceneByName ("GameScene"));
+
+
 		m_Rounds = new int[2];
 		m_Machine = new FSM<GameManager>( this, new IntroState() );
 
 		m_Machine.addState( new CountdownState() );
 		m_Machine.addState( new PlayState() );
 		m_Machine.addState( new ScoreState() );
+
+		Cursor.visible = false;
 	}
 
 	// Use this for initialization
@@ -68,11 +79,20 @@ public class GameManager : MonoBehaviour {
 		m_Machine.addState( new CountdownState() );
 		m_Machine.addState( new PlayState() );
 		m_Machine.addState( new ScoreState() );*/
+		ShowNotification (false, "Start!");
 	}
 
 	void Update() {
 		// update the state machine
 		m_Machine.update( Time.deltaTime );
+	}
+
+	public void ShowNotification(bool theft, string message, float time = 3f){
+		if (theft) {
+			m_TheftNotification.Show (message, 3);
+		} else {
+			m_CMNotification.Show (message, 3);
+		}
 	}
 	
 }

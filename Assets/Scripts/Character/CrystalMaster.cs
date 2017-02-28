@@ -30,6 +30,19 @@ public class CrystalMaster : Character {
 			var trap = go.GetComponent<Trap> ();
 			trap.Trigger (this);
 		} else if (go.tag == "Theft") {
+
+			// Check if CM is actually looking at the Theft
+			Vector3 toTheft = go.transform.position - transform.position;
+			Vector3 lookAt = transform.forward;
+
+			if (Vector3.Dot (toTheft, lookAt) < 0) {
+				Debug.Log ("Not looking at");
+				return;
+			}
+
+			// Look at theft directly
+			transform.rotation = Quaternion.LookRotation(toTheft);
+
 			m_Animator.Play ("Punch");
 		
 			var theft = go.GetComponent<Theft> ();
@@ -51,9 +64,10 @@ public class CrystalMaster : Character {
 
 		// If not enough crystals
 		if (m_CrystalLoads < 3) {
-			Debug.Log ("Not enough crystals");
+			GameManager.instance.ShowNotification (false, "Not enough Crystals!");
 			return;
 		}
+
 		m_CrystalLoads = 0;
 
 		m_Animator.Play ("Shoot");

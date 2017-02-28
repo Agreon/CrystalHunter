@@ -13,7 +13,8 @@ public abstract class Character : Trappable
 	public float m_CurrentSpeed;
 	public float m_SpeedUpDuration = 2;
 	//TODO: SpeedUpMultiplier
-	
+
+	private float m_OverloadCounter;
 	private float m_SpeedUpCounter;
 
 	// TODO: Check whats needed
@@ -77,9 +78,17 @@ public abstract class Character : Trappable
 	public void SpeedUp(){
 		m_CurrentSpeed = m_MovementSpeed*1.5f;
 		m_SpeedUpCounter = 0;
-		Debug.Log ("SpeedUp");
+
+		// Workaround for animator-bug
+		if (GlobalConfig.MULTIPLAYER && gameObject.name == "CrystalMaster") {
+			m_CurrentSpeed = m_MovementSpeed * (1.5f * 0.8f);
+		}
 	}
 
+	public void Overload(){
+		//FindObjectOfType<Camera> ().GetComponent<Twirl> ().enabled = true;
+
+	}
 
 	void UpdateAnimator(Vector3 move)
 	{

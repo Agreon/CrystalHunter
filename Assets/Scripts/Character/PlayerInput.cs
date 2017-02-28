@@ -39,21 +39,11 @@ using UnityStandardAssets.CrossPlatformInput;
           	// we use world-relative directions
             Vector3 move = v*Vector3.forward + h*Vector3.right;
 
-			if (_secondPlayer) {
-				Debug.Log (move);	// Max. 1
-
+			// Dirty workaround, bc the goelm is somehow faster with player-input
+			if (gameObject.name == "CrystalMaster") {
+				move *= 0.8f;
 			}
 			
-			/*if (move.x > 0.7)
-				move.x = 0.7f;
-			else if (move.x < -0.7)
-				move.x = -0.7f;
-
-			if (move.z > 0.7)
-				move.z = 0.7f;
-			else if (move.z < -0.7)
-				move.z = -0.7f;*/
-
 			// pass all parameters to the character control script
             m_Character.Move(move);
         }

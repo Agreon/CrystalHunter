@@ -14,45 +14,50 @@ public class AudioManager : MonoBehaviour {
 	private Object[] m_MetalMusic;
 	private AudioSource m_AudioSource;
 
+	private bool created = false;
+
 	void Awake(){
 		if (instance == null) {
 			instance = this;
+			DontDestroyOnLoad (this);
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}
-
-	//	DontDestroyOnLoad (gameObject);
+			
 		m_AudioSource = GetComponent<AudioSource> ();
 		m_AudioProcessor = GetComponent<AudioProcessor> ();
 		m_TechnoMusic = Resources.LoadAll ("TechnoMusic", typeof(AudioClip));
 		m_MetalMusic = Resources.LoadAll ("MetalMusic", typeof(AudioClip));
+
+
 	}
 
 	// Use this for initialization
 	void Start () {
-		m_MusicPopup.Show ("Header", "MainText", 5);
+		if (GlobalConfig.STARTUP) {
+			GlobalConfig.STARTUP = false;
+			AudioManager.instance.Play (false, "Thursday");
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (m_AudioSource.isPlaying == false) {
-			if (GlobalConfig.METAL_MODE) {
-				Play (false, null);
-			} else {
-				Play (true, null);
-			}
+			Play (GlobalConfig.METAL_MODE, null);
 		}
 	}
 
 
-	public void Play(bool standart, string name){
+	public void Play(bool metal, string name){
+
+		//return;
 
 		Object[] music;
 
-		if (standart) {
-			music = m_TechnoMusic;
-		} else {
+		if (metal) {
 			music = m_MetalMusic;
+		} else {
+			music = m_TechnoMusic;
 		}
 
 		int index = 0;
@@ -78,4 +83,9 @@ public class AudioManager : MonoBehaviour {
 
 		m_MusicPopup.Show (tokens [0].Trim(), tokens [1].Trim(), 4);
 	}
+
+	public void listen(BeatListener bl){
+		m_AudioProcessor.onBeat.AddListener (bl.OnBeat);
+	}
+
 }

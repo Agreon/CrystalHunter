@@ -17,7 +17,8 @@ public class BeatListener : MonoBehaviour {
 		m_Light = GetComponentInChildren<Light> ();
 		m_BaseIntensity = m_Light.intensity;
 
-		AudioManager.instance.m_AudioProcessor.onBeat.AddListener (OnBeat);
+		AudioManager.instance.listen (this);
+		//AudioManager.instance.m_AudioProcessor.onBeat.AddListener (OnBeat);
 	}
 	
 	// Update is called once per frame
@@ -48,6 +49,7 @@ public class BeatListener : MonoBehaviour {
 	}
 
 	public void OnBeat(){
+		Debug.Log ("BEAT");
 		m_Counter = 0.001f;
 		m_Beat = true;
 	}

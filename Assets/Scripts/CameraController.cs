@@ -19,6 +19,10 @@ using System.Collections.Generic;
 		private float m_Counter = 0;
 
 		void Start(){
+
+
+
+
 		}
 
 
@@ -40,6 +44,8 @@ using System.Collections.Generic;
 			}
 
 			color1 = Color.Lerp(color1, color2, t);
+			//RenderSettings.ambientSkyColor = color1;
+
 			GetComponent<Camera>().backgroundColor = color1;
 	}
 

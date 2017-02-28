@@ -44,18 +44,24 @@ public class ChaseTheft : FSMState<AIInput>
 
 		// Shoot at player TODO: TEMP
 		if(canSeeTheft && _context.m_Character.m_CrystalLoads == 3) {
-			
-			// Only shoot with chance
-			if(Random.Range(0,100) < m_ShootChance) {		
-			Debug.Log("Shoot");
-		
-				// TODO: Not good?
-				//_context.m_Character.transform.rotation = Quaternion.LookRotation (_context.m_Theft.transform.position);
 
-			 _context.m_Character.Action();
-			 return;
+			// Check if CM is actually looking at the Theft
+			Vector3 toTheft = m_Target.position - m_Character.position;
+			Vector3 lookAt = m_Character.forward;
+
+			if (Vector3.Dot (toTheft, lookAt) > 0) {
+
+				// Only shoot with chance
+				if(Random.Range(0,100) < m_ShootChance) {		
+					Debug.Log("Shoot");
+
+					// Look at theft
+					_context.m_Character.transform.rotation = Quaternion.LookRotation(toTheft);
+
+					_context.m_Character.Action();
+					return;
+				}	
 			}
-			
 		} 
 
 
@@ -87,16 +93,22 @@ public class ChaseTheft : FSMState<AIInput>
 		// If Player is very near  | TODO: Formel verbessern
 		//if ( distanceToPlayer < 9 && (minDistance + (distanceCrystallToPlayer*0.5) < distanceToPlayer)) {
 
-		if(distanceToPlayer < 5) {
-		/*context.m_TargetedCrystal = nearestCrystal;
-			_machine.changeState<CollectCrystal>();
-			Debug.Log ("Crystal Near enough");*/
-		// If Crystal is near enough
-		} else {//if(minDistance < 14) {
+		if(distanceToPlayer < 5 && distanceToPlayer > minDistance){
 			_context.m_TargetedCrystal = nearestCrystal;
 			_machine.changeState<CollectCrystal>();
 			Debug.Log ("Player Far enough");
 		}
+
+		//if(distanceToPlayer < 8) {
+		/*context.m_TargetedCrystal = nearestCrystal;
+			_machine.changeState<CollectCrystal>();
+			Debug.Log ("Crystal Near enough");*/
+		// If Crystal is near enough
+		/*} else {//if(minDistance < 14) {
+			_context.m_TargetedCrystal = nearestCrystal;
+			_machine.changeState<CollectCrystal>();
+			Debug.Log ("Player Far enough");
+		}*/
 		
 	}
 		
