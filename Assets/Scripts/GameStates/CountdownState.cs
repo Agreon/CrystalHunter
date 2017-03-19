@@ -13,6 +13,7 @@ public class CountdownState : FSMState<GameManager>
 	public override void begin() {
 		m_CountdownText = GameObject.Find("CountdownText").GetComponent<Text>();
 		m_CountdownText.enabled = true;
+		Camera.main.GetComponent<Animator> ().Play ("CameraFly");
 	}
 		
 	public void shutdown(){
@@ -31,6 +32,7 @@ public class CountdownState : FSMState<GameManager>
 
 		if (m_Counter > m_CountdownDuration) {
 			shutdown ();
+			_context.m_FromPause = false;
 			_machine.changeState<PlayState> ();
 		}
 	}

@@ -8,11 +8,11 @@ public class CrystalMaster : Character {
 	[SerializeField]public GameObject m_CrystalShot;
 	[SerializeField]public GameObject m_ShotSpawn;
 	[SerializeField]public GameObject m_ObjectContainer;
+	[SerializeField]public float m_SpellReloadCounter = 0;
+	[SerializeField]public float m_SpellReloadTime = 3;
 
 	/**
 	 * Checks collision with other gameObjects
-	 * 
-	 * TODO: Sounds / Anims / UI
 	 **/ 
 	public override void OnCollisionEnter(Collision collision){
 
@@ -26,7 +26,6 @@ public class CrystalMaster : Character {
 			CrystalManager.instance.CrystalCollected (go);
 			SpeedUp();
 		} else if (go.tag == "Trap") {
-			Debug.Log ("Collision with Trap");
 			var trap = go.GetComponent<Trap> ();
 			trap.Trigger (this);
 		} else if (go.tag == "Theft") {
@@ -56,6 +55,10 @@ public class CrystalMaster : Character {
 		yield return new WaitForSeconds(1);
 		GameManager.instance.m_GameOver = true;
 	}
+
+	public void Update(){
+		m_SpellReloadCounter += Time.deltaTime;
+	}
 		
 	/**
 	 * Shoots Magic
@@ -63,11 +66,14 @@ public class CrystalMaster : Character {
 	public override void Action(){
 
 		// If not enough crystals
-		if (m_CrystalLoads < 3) {
+		//if (m_CrystalLoads < 3) {
+		if (m_SpellReloadCounter < m_SpellReloadTime){
 			GameManager.instance.ShowNotification (false, "Not enough Crystals!");
+			AudioManager.instance.PlaySound ("not_possible");
 			return;
 		}
 
+		m_SpellReloadCounter = 0;
 		m_CrystalLoads = 0;
 
 		m_Animator.Play ("Shoot");

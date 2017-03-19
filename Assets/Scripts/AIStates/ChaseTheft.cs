@@ -41,9 +41,9 @@ public class ChaseTheft : FSMState<AIInput>
 				canSeeTheft = true;
 			} 
 		}
-
+		Debug.Log (_context.m_Character.m_SpellReloadCounter);
 		// Shoot at player TODO: TEMP
-		if(canSeeTheft && _context.m_Character.m_CrystalLoads == 3) {
+		if(canSeeTheft && _context.m_Character.m_SpellReloadCounter >= _context.m_Character.m_SpellReloadTime/*_context.m_Character.m_CrystalLoads == 3*/) {
 
 			// Check if CM is actually looking at the Theft
 			Vector3 toTheft = m_Target.position - m_Character.position;

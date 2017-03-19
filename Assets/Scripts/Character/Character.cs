@@ -146,7 +146,10 @@ public abstract class Character : Trappable
 
 	public override void Trap(){
 		Debug.Log ("Catched");
-		// So that the char is in the middle of the trap
+		m_Trapped = true;
+		this.disableInput ();
+
+		/*// So that the char is in the middle of the trap
 		this.Move (new Vector3 (0,0,0));
 		m_Animator.SetFloat("Forward", 0, 0.5f, Time.deltaTime);
 		m_Animator.SetFloat("Turn", 0, 0.5f, Time.deltaTime);
@@ -159,7 +162,7 @@ public abstract class Character : Trappable
 		// Disable NavMeshAgent
 		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
 			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-		}
+		}*/
 	}
 
 	public override void Release(){
@@ -167,10 +170,20 @@ public abstract class Character : Trappable
 
 		//m_Animator.Play("Grounded");
 	
-		// Enable NavMeshAgent
-		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
-			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
+		// TODO: Test
+		if (GlobalConfig.MULTIPLAYER) {
+			GetComponent<PlayerInput> ().enabled = true;		
+		} else {
+			if (GetComponent<AIInput> () != null) {
+				GetComponent<AIInput> ().enabled = true;
+			}
+
+			// Enable NavMeshAgent
+			if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
+				GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
+			}
 		}
+
 	}
 
 	public int GetCrystals(){
@@ -179,6 +192,23 @@ public abstract class Character : Trappable
 		
 	public int GetCrystalLoads(){
 		return m_CrystalLoads;
+	}
+		
+	public void disableInput(){
+		GetComponent<PlayerInput>().enabled = false;
+		if (GetComponent<AIInput> () != null) {
+			GetComponent<AIInput>().enabled = false;
+		}
+
+		this.Move (new Vector3 (0, 0, 0));
+
+		m_Animator.SetFloat("Forward", 0);
+		m_Animator.SetFloat("Turn", 0);
+
+		// Disable navmeshagent
+		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
+			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+		}
 	}
 		
 	public abstract void Action();

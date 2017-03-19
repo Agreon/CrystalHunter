@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 [RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour {
@@ -9,12 +11,18 @@ public class AudioManager : MonoBehaviour {
 
 	public Popup m_MusicPopup;
 
+	public AudioSource m_MusicSource;
+	public AudioSource m_SoundEffectsSource;
+	public AudioSource m_BreathingSource;
+	public AudioMixer m_Mixer;
+
 	public AudioProcessor m_AudioProcessor;
+
 	private Object[] m_TechnoMusic;
 	private Object[] m_MetalMusic;
-	private AudioSource m_AudioSource;
 
-	private bool created = false;
+	private Object[] m_Sounds;
+	private Queue<AudioClip> m_Soundqueue;
 
 	void Awake(){
 		if (instance == null) {
@@ -23,35 +31,37 @@ public class AudioManager : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}
-			
-		m_AudioSource = GetComponent<AudioSource> ();
+
+		m_Soundqueue = new Queue<AudioClip> ();
+					
 		m_AudioProcessor = GetComponent<AudioProcessor> ();
 		m_TechnoMusic = Resources.LoadAll ("TechnoMusic", typeof(AudioClip));
 		m_MetalMusic = Resources.LoadAll ("MetalMusic", typeof(AudioClip));
+		m_Sounds = Resources.LoadAll ("Sounds", typeof(AudioClip));
 
-
+		m_BreathingSource.clip = FindSound ("breathing", m_Sounds);
 	}
 
 	// Use this for initialization
 	void Start () {
 		if (GlobalConfig.STARTUP) {
 			GlobalConfig.STARTUP = false;
-			AudioManager.instance.Play (false, "Thursday");
+			//Play (false, "Thursday");
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (m_AudioSource.isPlaying == false) {
+		if (m_MusicSource.isPlaying == false) {
 			Play (GlobalConfig.METAL_MODE, null);
+		}
+		if (m_Soundqueue.Count > 0 && m_SoundEffectsSource.isPlaying == false) {
+			m_SoundEffectsSource.clip = m_Soundqueue.Dequeue ();
+			m_SoundEffectsSource.Play ();
 		}
 	}
 
-
 	public void Play(bool metal, string name){
-
-		//return;
-
 		Object[] music;
 
 		if (metal) {
@@ -60,32 +70,60 @@ public class AudioManager : MonoBehaviour {
 			music = m_TechnoMusic;
 		}
 
-		int index = 0;
+		AudioClip clip;
 
 		if (name == null) {
-			index = Random.Range (0, music.Length);
+			int index = Random.Range (0, music.Length);
+			clip = music [index] as AudioClip;
 		} else {
-			for (int i = 0; i < music.Length; i++) {
-				var clip = music [i] as AudioClip;
-				if (clip.name.Contains (name)) {
-					index = i;
-					break;
-				}
-			}
+			clip = FindSound (name, music);
 		}
 
-		m_AudioSource.clip = music [index] as AudioClip;
-		m_AudioSource.Play ();
-		m_AudioProcessor.setAudioSource (m_AudioSource);
+		m_MusicSource.clip = clip;
+		m_MusicSource.Play ();
+		m_AudioProcessor.setAudioSource (m_MusicSource);
 
 		// Show name in GUI
-		string[] tokens = m_AudioSource.clip.name.Split ('-');
+		string[] tokens = m_MusicSource.clip.name.Split ('-');
 
 		m_MusicPopup.Show (tokens [0].Trim(), tokens [1].Trim(), 4);
 	}
 
-	public void listen(BeatListener bl){
-		m_AudioProcessor.onBeat.AddListener (bl.OnBeat);
+	private AudioClip FindSound(string name, Object[] sounds){
+		int index = 0;
+
+		for (int i = 0; i < sounds.Length; i++) {
+			var clip = sounds [i] as AudioClip;
+			if (clip.name.Contains (name)) {
+				index = i;
+				break;
+			}
+		}
+		return sounds [index] as AudioClip;
 	}
+
+	public void PlaySound(string name) {
+		m_SoundEffectsSource.clip = FindSound(name, m_Sounds);
+		m_SoundEffectsSource.Play ();
+	}
+
+	// Plays a sound effect
+	public void PlaySoundQueue(string name){
+		m_Soundqueue.Enqueue (FindSound(name,m_Sounds));
+	}
+
+	public void Listen(BeatListener bl){
+		m_AudioProcessor.onBeat.AddListener (bl.OnBeat);
+		m_AudioProcessor.onSpectrum.AddListener (bl.OnSpectrum);
+	}
+
+	public void SetBreathing(bool b){
+		if (b) {
+			m_BreathingSource.Play ();
+		} else {
+			m_BreathingSource.Pause ();
+		}
+	}
+
 
 }

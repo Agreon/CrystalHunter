@@ -10,7 +10,7 @@ namespace UnityStandardAssets.ImageEffects
     {
 
         [Range(0, 2)]
-        public int downsample = 1;
+        public float downsample = 1;
 
         public enum BlurType {
             StandardGauss = 0,
@@ -49,14 +49,14 @@ namespace UnityStandardAssets.ImageEffects
                 Graphics.Blit (source, destination);
                 return;
             }
-
-            float widthMod = 1.0f / (1.0f * (1<<downsample));
+			int ds = (int)downsample;
+            float widthMod = 1.0f / (1.0f * (1<<ds));
 
             blurMaterial.SetVector ("_Parameter", new Vector4 (blurSize * widthMod, -blurSize * widthMod, 0.0f, 0.0f));
             source.filterMode = FilterMode.Bilinear;
 
-            int rtW = source.width >> downsample;
-            int rtH = source.height >> downsample;
+            int rtW = source.width >> ds;
+            int rtH = source.height >> ds;
 
             // downsample
             RenderTexture rt = RenderTexture.GetTemporary (rtW, rtH, 0, source.format);

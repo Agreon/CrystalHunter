@@ -14,7 +14,7 @@ public class ScoreState : FSMState<GameManager>
 
 
 	public override void begin() {
-		
+		// TODO:	_context.m_Canvas.transform.Find(
 		m_ScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
 		m_Player1Score = GameObject.Find("Player1Score").GetComponent<Text>();
 		m_Player2Score = GameObject.Find("Player2Score").GetComponent<Text>();
@@ -22,12 +22,13 @@ public class ScoreState : FSMState<GameManager>
 		m_ContinueText = GameObject.Find("ContinueText").GetComponent<Text>();
 		
 		if(GlobalConfig.MULTIPLAYER){
+
+			m_ContinueText.enabled = true;
+
 			// Show single score
 			if (_context.m_CurrentRound == 0) {
 
 				m_Player1Score.enabled = true;
-				m_ContinueText.enabled = true;
-
 				m_Player1Score.text = "Player 1: " + _context.m_Rounds [0].ToString ();
 				m_ContinueText.text = "Press a key to continue!";
 
@@ -41,6 +42,7 @@ public class ScoreState : FSMState<GameManager>
 
 				m_Player1Score.text = "Player 1: " + _context.m_Rounds [0].ToString ();
 				m_Player2Score.text = "Player 2: " + _context.m_Rounds [1].ToString ();
+				m_ContinueText.text = "Press a key to get to the menu!";
 
 				if (_context.m_Rounds [0] > _context.m_Rounds [1]) {
 					m_WinnerText.text = "Player 1 Wins!"; 
@@ -77,10 +79,8 @@ public class ScoreState : FSMState<GameManager>
 				_context.m_CurrentRound = 1;
 				_machine.changeState<CountdownState> ();		
 			} else {
-				_machine.changeState<IntroState> ();		
-
 				// Change to MenuScene
-				SceneManager.LoadSceneAsync("MenuScene", LoadSceneMode.Single);
+				_machine.changeState<MenuState>();
 			}
 		}
 		

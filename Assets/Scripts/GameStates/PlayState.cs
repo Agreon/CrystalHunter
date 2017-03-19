@@ -4,11 +4,8 @@ using System.Collections;
 using AI.FiniteStateMachine;
 
 public class PlayState : FSMState<GameManager>
-{
-	private Theft m_Theft;
-	private CrystalMaster m_CrystalMaster;
-	
-	private float m_PlayTime = 0;
+{	
+	private float m_PlayTime;
 
 	private Text m_TimeText;
 	private Text m_CrystalText;
@@ -18,47 +15,57 @@ public class PlayState : FSMState<GameManager>
 
 	
 	public override void begin() {
-		
-		m_Theft = Object.FindObjectOfType<Theft> ();
-		m_CrystalMaster = Object.FindObjectOfType<CrystalMaster> ();		
-
 		_context.m_GameOver = false;
 
-		// Enable Input
+		CrystalManager.instance.enable();
+		_context.m_Theft.GetComponent<Animator> ().enabled = true;
+		Camera.main.GetComponent<CameraPositioner> ().enabled = true;
+		m_PlayTime = 0;
+
+		AudioManager.instance.SetBreathing (true);
+	
+		/**
+		 * Enable Input
+		 * */
 		if(GlobalConfig.MULTIPLAYER) {
 			// First Round
 			if(_context.m_CurrentRound == 0){
-				m_Theft.GetComponent<PlayerInput>().enabled = true;
-				m_Theft.GetComponent<PlayerInput>()._secondPlayer = false;
+				_context.m_Theft.GetComponent<PlayerInput>().enabled = true;
+				_context.m_Theft.GetComponent<PlayerInput>()._secondPlayer = false;
 				
-				m_CrystalMaster.GetComponent<PlayerInput>().enabled = true;
-				m_CrystalMaster.GetComponent<PlayerInput>()._secondPlayer = true;
+				_context.m_CrystalMaster.GetComponent<PlayerInput>().enabled = true;
+				_context.m_CrystalMaster.GetComponent<PlayerInput>()._secondPlayer = true;
 			}
 			// Second Round
 			else {
-				m_Theft.GetComponent<PlayerInput>().enabled = true;
-				m_Theft.GetComponent<PlayerInput>()._secondPlayer = true;
+				_context.m_Theft.GetComponent<PlayerInput>().enabled = true;
+				_context.m_Theft.GetComponent<PlayerInput>()._secondPlayer = true;
 				
-				m_CrystalMaster.GetComponent<PlayerInput>().enabled = true;
-				m_CrystalMaster.GetComponent<PlayerInput>()._secondPlayer = false;
+				_context.m_CrystalMaster.GetComponent<PlayerInput>().enabled = true;
+				_context.m_CrystalMaster.GetComponent<PlayerInput>()._secondPlayer = false;
 			}
 		} else {
 			// Set PlayerIn
-			m_Theft.GetComponent<PlayerInput>().enabled = true;
-			m_Theft.GetComponent<PlayerInput>()._secondPlayer = false;
+			_context.m_Theft.GetComponent<PlayerInput>().enabled = true;
+			_context.m_Theft.GetComponent<PlayerInput>()._secondPlayer = false;
 			
 			// Enable KIIn
-			m_CrystalMaster.GetComponent<AIInput>().enabled = true;
+			_context.m_CrystalMaster.GetComponent<AIInput>().enabled = true;
+			_context.m_CrystalMaster.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
+		}
+
+
+		if (_context.m_FromPause) {
+			return;
 		}
 
 		// Reset Chars
-		m_Theft.transform.position = new Vector3(-5,3.5f,10.9f);
-		m_Theft.transform.rotation = Quaternion.Euler(new Vector3(0,90,0));
-		m_Theft.GetComponent<Animator> ().Play ("Grounded");
-
-		m_CrystalMaster.transform.position = new Vector3(5,3.35f,10.9f);
-		m_CrystalMaster.transform.rotation = Quaternion.Euler(new Vector3(0,-90,0));
-		m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
+		_context.m_Theft.transform.position = _context.m_TheftStart.position;
+		_context.m_Theft.transform.rotation = _context.m_TheftStart.rotation;
+		_context.m_CrystalMaster.transform.position = _context.m_CrystalMasterStart.position;
+		_context.m_CrystalMaster.transform.rotation = _context.m_CrystalMasterStart.rotation;
+		_context.m_Theft.GetComponent<Animator> ().Play ("Grounded");
+		_context.m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
 
 		// Clear temp objects
 		var ObjectContainer = GameObject.Find ("ObjectContainer");
@@ -86,16 +93,15 @@ public class PlayState : FSMState<GameManager>
 			m_CMCrystalLoads [i] = CMCrystalContainer.transform.GetChild(i).gameObject;
 		}
 			
-		CrystalManager.instance.enable();
 	}
 
 	void shutdown(){
 		m_TimeText.enabled = false;
 		m_CrystalText.enabled = false;
 
-		m_Theft.GetComponent<PlayerInput>().enabled = false;
-		m_CrystalMaster.GetComponent<PlayerInput>().enabled = false;
-		m_CrystalMaster.GetComponent<AIInput>().enabled = false;
+		_context.m_Theft.GetComponent<PlayerInput>().enabled = false;
+		_context.m_CrystalMaster.GetComponent<PlayerInput>().enabled = false;
+		_context.m_CrystalMaster.GetComponent<AIInput>().enabled = false;
 
 		for (int i = 0; i < 3; i++) {
 			m_TheftCrystalLoads[i].GetComponent<Renderer>().enabled = false;
@@ -114,11 +120,17 @@ public class PlayState : FSMState<GameManager>
 
 		m_TimeText.text = parseTime(m_PlayTime);
 
-		int crystals = m_Theft.GetCrystals ();
+		int crystals = _context.m_Theft.GetCrystals ();
 		m_CrystalText.text = "Crystals: " + crystals.ToString();
-		
+
+
+		if (Input.GetKey (KeyCode.Escape)) {
+			AudioManager.instance.SetBreathing (false);
+			_machine.changeState<PauseState> ();
+		}
+
 		// Show CrystalLoads
-		int crystalLoads = m_Theft.GetCrystalLoads();
+		int crystalLoads = _context.m_Theft.GetCrystalLoads();
 		
 		for(int i = 0; i < 3; i++){
 			if(i >= crystalLoads){
@@ -140,7 +152,7 @@ public class PlayState : FSMState<GameManager>
 		// Show CM CrystalLoads
 		if (GlobalConfig.MULTIPLAYER) {
 
-			int CMCrystalLoads = m_CrystalMaster.GetCrystalLoads();
+			int CMCrystalLoads = _context.m_CrystalMaster.GetCrystalLoads();
 
 			for(int i = 0; i < 3; i++){
 				if(i >= CMCrystalLoads){
@@ -188,10 +200,13 @@ public class PlayState : FSMState<GameManager>
 	void GameOver(){
 
 		// Save Points
-		_context.m_Rounds[_context.m_CurrentRound] = m_Theft.GetCrystals() + ((int)m_PlayTime/2); 
-		
+		_context.m_Rounds[_context.m_CurrentRound] = _context.m_Theft.GetCrystals() + ((int)m_PlayTime/2); 
+
 		shutdown();
 	
+		AudioManager.instance.SetBreathing (false);
+		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
+
 		_machine.changeState<ScoreState> ();
 	}
 		

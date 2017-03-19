@@ -12,14 +12,20 @@ public class GameManager : MonoBehaviour {
 	public Notification m_TheftNotification;
 	public Notification m_CMNotification;
 
+	public Theft m_Theft;
+	public CrystalMaster m_CrystalMaster;
+
+	public Transform m_TheftStart;
+	public Transform m_CrystalMasterStart;
+	public Transform m_CameraStart;
+
+	public Canvas m_Canvas;
 
 	private FSM<GameManager> m_Machine;
 
-	public Character m_CurrentChar;
-
 	public int m_CurrentRound = 0;
 	public int[] m_Rounds;
-	
+	public bool m_FromPause = false;
 	
 	// Temp
 	public bool m_GameOver = false;
@@ -31,26 +37,21 @@ public class GameManager : MonoBehaviour {
 			Destroy (gameObject);
 			return;
 		}
-		/*
-		m_Rounds = new int[2];
 
-		//m_Machine = new FSM<GameManager>( this, new PlayState() );
-		m_Machine = new FSM<GameManager>( this, new IntroState() );
+		GlobalConfig.IN_GAME = true;
 
-		m_Machine.addState( new CountdownState() );
-		m_Machine.addState( new PlayState() );
-		m_Machine.addState( new ScoreState() );*/
-
-		//SceneManager.UnloadSceneAsync (SceneManager.GetSceneByName ("MenuScene"));
-		//SceneManager.SetActiveScene (SceneManager.GetSceneByName ("GameScene"));
-
+		m_TheftStart = m_Theft.transform;
+		m_CrystalMasterStart = m_CrystalMaster.transform;
+		m_CameraStart = Camera.main.transform;
 
 		m_Rounds = new int[2];
-		m_Machine = new FSM<GameManager>( this, new IntroState() );
+		m_Machine = new FSM<GameManager>( this, new MenuState() );
 
+		m_Machine.addState( new IntroState() );
 		m_Machine.addState( new CountdownState() );
 		m_Machine.addState( new PlayState() );
 		m_Machine.addState( new ScoreState() );
+		m_Machine.addState( new PauseState() );
 
 		Cursor.visible = false;
 	}
@@ -64,22 +65,6 @@ public class GameManager : MonoBehaviour {
 			reader.close();
 		}
 		*/
-	/*	m_Rounds = new int[2];
-		Debug.Log ("FUU");
-		//m_Machine = new FSM<GameManager>( this, new PlayState() );
-		m_Machine = new FSM<GameManager>( this, new IntroState() );
-
-		m_Machine.addState( new CountdownState() );
-		m_Machine.addState( new PlayState() );
-		m_Machine.addState( new ScoreState() );*/
-		Debug.Log ("FSM Start");
-	/*	m_Rounds = new int[2];
-		m_Machine = new FSM<GameManager>( this, new IntroState() );
-
-		m_Machine.addState( new CountdownState() );
-		m_Machine.addState( new PlayState() );
-		m_Machine.addState( new ScoreState() );*/
-		ShowNotification (false, "Start!");
 	}
 
 	void Update() {

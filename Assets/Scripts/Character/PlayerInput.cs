@@ -27,6 +27,7 @@ using UnityStandardAssets.CrossPlatformInput;
 			
 			float h = CrossPlatformInputManager.GetAxis(player+"Horizontal");
 			float v = CrossPlatformInputManager.GetAxis(player+"Vertical");
+			// Is float bc of gamepad-input
 			float action = CrossPlatformInputManager.GetAxis(player+"Action");
 
             

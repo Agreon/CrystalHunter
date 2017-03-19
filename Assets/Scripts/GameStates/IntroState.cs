@@ -13,6 +13,7 @@ public class IntroState : FSMState<GameManager>
 	public override void begin() {
 		m_ConfirmText = GameObject.Find ("ConfirmText").GetComponent<Text> ();
 		m_ConfirmText.enabled = true;
+		_context.m_Theft.GetComponent<Animator> ().enabled = false;
 	}
 
 	// Switches to the Countdown

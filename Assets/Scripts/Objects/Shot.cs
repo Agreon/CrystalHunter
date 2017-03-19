@@ -44,6 +44,8 @@ public class Shot : MonoBehaviour {
 		position.y = -0.8f;
 		Instantiate (m_SpawnObject, position, Quaternion.identity, m_ObjectContainer.transform);
 
+		AudioManager.instance.PlaySound ("raiseWall");
+
 		Destroy(this.gameObject);
 	}
 

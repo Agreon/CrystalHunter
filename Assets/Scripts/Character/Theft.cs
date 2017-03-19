@@ -10,7 +10,9 @@ public class Theft : Character {
 
 	// Start Animation "Die"
 	public void Kill() {
+		AudioManager.instance.PlaySoundQueue ("wilhelm");
 		m_Animator.Play("Die");
+		Debug.Log ("Die");
 	}
 	
 	/**
@@ -45,6 +47,7 @@ public class Theft : Character {
 		// If not enough crystals
 		if (m_CrystalLoads < 3) {
 			GameManager.instance.ShowNotification (true, "Not enough Crystals!");
+			AudioManager.instance.PlaySound ("not_possible");
 			return;
 		}
 

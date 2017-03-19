@@ -7,15 +7,15 @@ using AI.FiniteStateMachine;
 public class AIInput : MonoBehaviour {
 	
 	// TODO: Dont serialize
-	public Character m_Character;
-	public Character m_Theft;
+	public CrystalMaster m_Character;
+	public Theft m_Theft;
 
 	public GameObject m_TargetedCrystal;
 
 	private FSM<AIInput> m_Machine;
 
 	void Start() {
-		m_Character = GetComponent<Character>();
+		m_Character = GetComponent<CrystalMaster>();
 
 		m_Machine = new FSM<AIInput>( this, new ChaseTheft() );
 
