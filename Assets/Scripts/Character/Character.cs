@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.Characters.ThirdPerson;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -15,14 +16,14 @@ public abstract class Character : Trappable
 	//TODO: SpeedUpMultiplier
 
 	private float m_OverloadCounter;
-	private float m_SpeedUpCounter;
+	protected float m_SpeedUpCounter;
+
+	public Transform m_StartTransform;
 
 	// TODO: Check whats needed
 	[SerializeField] float m_MovingTurnSpeed = 360;
 	[SerializeField] float m_StationaryTurnSpeed = 180;
 	[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
-	[SerializeField] float m_MoveSpeedMultiplier = 1f;
-	[SerializeField] float m_AnimSpeedMultiplier = 1f;
 
 	Rigidbody m_Rigidbody;
 	protected Animator m_Animator;
@@ -54,7 +55,6 @@ public abstract class Character : Trappable
 		if(m_SpeedUpCounter > 0 && m_SpeedUpCounter >= m_SpeedUpDuration) {
 			m_CurrentSpeed = m_MovementSpeed;
 			m_SpeedUpCounter = 0;
-			Debug.Log ("SpeedEnd");
 		}
 	
 		// convert the world relative moveInput vector into a local-relative
@@ -109,18 +109,6 @@ public abstract class Character : Trappable
 				m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime + m_RunCycleLegOffset, 1);
 		float jumpLeg = (runCycle < k_Half ? 1 : -1) * m_ForwardAmount;
 		m_Animator.SetFloat("JumpLeg", jumpLeg);
-		
-
-		// the anim speed multiplier allows the overall speed of walking/running to be tweaked in the inspector,
-		// which affects the movement speed because of the root motion.
-		if (move.magnitude > 0)
-		{
-			m_Animator.speed = m_AnimSpeedMultiplier;
-		}
-		else
-		{
-			m_Animator.speed = 1;
-		}
 	}
 
 	void ApplyExtraTurnRotation()
@@ -147,22 +135,12 @@ public abstract class Character : Trappable
 	public override void Trap(){
 		Debug.Log ("Catched");
 		m_Trapped = true;
-		this.disableInput ();
+		this.DisableInput ();
 
 		/*// So that the char is in the middle of the trap
 		this.Move (new Vector3 (0,0,0));
 		m_Animator.SetFloat("Forward", 0, 0.5f, Time.deltaTime);
-		m_Animator.SetFloat("Turn", 0, 0.5f, Time.deltaTime);
-
-		//
-		//m_Animator.Play("Catched");
-
-		m_Trapped = true;
-		
-		// Disable NavMeshAgent
-		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
-			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-		}*/
+		m_Animator.SetFloat("Turn", 0, 0.5f, Time.deltaTime);*/
 	}
 
 	public override void Release(){
@@ -194,7 +172,7 @@ public abstract class Character : Trappable
 		return m_CrystalLoads;
 	}
 		
-	public void disableInput(){
+	public void DisableInput(){
 		GetComponent<PlayerInput>().enabled = false;
 		if (GetComponent<AIInput> () != null) {
 			GetComponent<AIInput>().enabled = false;
@@ -206,12 +184,20 @@ public abstract class Character : Trappable
 		m_Animator.SetFloat("Turn", 0);
 
 		// Disable navmeshagent
-		if (GetComponent<UnityEngine.AI.NavMeshAgent> () != null) {
-			GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+		if (GetComponent<NavMeshAgent> () != null) {
+			GetComponent<NavMeshAgent>().enabled = false;
 		}
+	}
+
+	public virtual void Reset(){
+		transform.position = m_StartTransform.position;
+		transform.rotation = m_StartTransform.rotation;
+		m_CurrentSpeed = m_MovementSpeed;
+		m_SpeedUpCounter = 0;
+		m_Crystals = 0;
+		m_CrystalLoads = 0;
 	}
 		
 	public abstract void Action();
 	public abstract void OnCollisionEnter(Collision collision); 
-	
 }

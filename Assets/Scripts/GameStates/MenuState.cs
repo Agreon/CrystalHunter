@@ -25,9 +25,38 @@ public class MenuState : FSMState<GameManager>
 
 		Pillar[] pillars = GameObject.FindObjectsOfType<Pillar> ();
 		foreach(Pillar p in pillars){
+			p.LoadMaterial ();
 			p.UpdateMaterial(); 
 		}
-			
+
+		// Resetting of GameObjects
+
+		// Clear temp objects
+		var ObjectContainer = GameObject.Find ("ObjectContainer");
+		foreach (Transform child in ObjectContainer.transform) {
+			GameObject.Destroy(child.gameObject);
+		}
+
+		CrystalManager.instance.clear ();
+
+		// Reset Chars
+		_context.m_Theft.Reset();
+		_context.m_CrystalMaster.Reset ();
+
+		_context.m_Theft.GetComponent<Animator> ().Play ("GrabbingCrystal");
+		//_context.m_Theft.GetComponent<Animator> ().Play ("Crouch");
+		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Forward", 0);
+		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Turn", 0);
+		_context.m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
+
+		// Reset Camera
+		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
+		Camera.main.GetComponent<CameraController> ().Reset ();
+
+		enableUI ();
+	}
+
+	public void enableUI(){
 		m_SinglePlayerBtn = GameObject.Find ("SingleplayerButton");
 		m_SinglePlayerBtn.GetComponent<Button>().onClick.AddListener (() => {
 			StartSingle();
@@ -53,8 +82,6 @@ public class MenuState : FSMState<GameManager>
 
 		m_MetalModeToggle.GetComponentInChildren<Image> ().enabled = true;
 		m_MetalModeToggle.GetComponentInChildren<Text> ().enabled = true;
-
-
 	}
 
 	public void setButton(GameObject btn, bool enabled){
@@ -70,7 +97,6 @@ public class MenuState : FSMState<GameManager>
 
 		m_MetalModeToggle.GetComponentInChildren<Image> ().enabled = false;
 		m_MetalModeToggle.GetComponentInChildren<Text> ().enabled = false;
-
 
 		Cursor.visible = false;
 	}
@@ -109,8 +135,6 @@ public class MenuState : FSMState<GameManager>
 		foreach(Pillar p in pillars){
 			p.UpdateMaterial(); 
 		}
-
-		//GameObject.Find ("MetalModeToggle").GetComponent<Toggle> ().isOn = toggled;
 	}
 
 	public void ExitGame(){

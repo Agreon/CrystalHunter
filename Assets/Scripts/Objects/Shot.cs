@@ -9,14 +9,26 @@ public class Shot : MonoBehaviour {
 	public GameObject m_SpawnObject;
 	public GameObject m_ObjectContainer;
 
+	private Rigidbody m_RigidBody;
+	private Vector3 m_SavedVelocity;
+
 	// Use this for initialization
 	void Start () {
-		
+		m_RigidBody = GetComponent<Rigidbody> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+		if (GlobalConfig.PAUSED && m_RigidBody.velocity.magnitude != 0) {
+			m_SavedVelocity = m_RigidBody.velocity;
+			m_RigidBody.velocity = new Vector3(0,0,0);
+		}
+
+		if (GlobalConfig.PAUSED == false && m_RigidBody.velocity.magnitude == 0) {
+			m_RigidBody.velocity = m_SavedVelocity;
+		}
+
 	}
 
 	private void CatchTheft(Theft theft){

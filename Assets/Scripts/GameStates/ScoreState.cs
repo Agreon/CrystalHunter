@@ -61,11 +61,32 @@ public class ScoreState : FSMState<GameManager>
 	}
 		
 	public void shutdown() {
+		// Diable UI
 		m_ScoreText.enabled = false;
 		m_ContinueText.enabled = false;
 		m_Player1Score.enabled = false;
 		m_Player2Score.enabled = false;
 		m_WinnerText.enabled = false;
+
+		// Clear temp objects
+		var ObjectContainer = GameObject.Find ("ObjectContainer");
+		foreach (Transform child in ObjectContainer.transform) {
+			GameObject.Destroy(child.gameObject);
+		}
+
+		CrystalManager.instance.clear ();
+
+		// Reset Chars
+		_context.m_Theft.Reset();
+		_context.m_CrystalMaster.Reset ();
+	
+		_context.m_Theft.GetComponent<Animator> ().Play ("Crouch");
+		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Forward", 0);
+		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Turn", 0);
+		_context.m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
+
+		// Reset Camera
+		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
 	}
 
 	public override void update( float deltaTime ) {

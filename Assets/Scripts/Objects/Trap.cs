@@ -59,6 +59,11 @@ public class Trap : MonoBehaviour {
 	}
 
 	public void Update() {
+
+		if (GlobalConfig.PAUSED) {
+			return;
+		}
+
 		if (m_IsTriggered) {
 			m_TimeActive += Time.deltaTime;
 		}

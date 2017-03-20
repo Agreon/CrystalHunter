@@ -59,9 +59,13 @@ public class CrystalMaster : Character {
 	public void Update(){
 		m_SpellReloadCounter += Time.deltaTime;
 	}
-		
+
+	public float GetReloadCounter(){
+		return m_SpellReloadCounter;
+	}
+
 	/**
-	 * Shoots Magic
+	 * Shoots Crystal-Magic
 	 * */
 	public override void Action(){
 
@@ -82,5 +86,10 @@ public class CrystalMaster : Character {
 
 		Physics.IgnoreCollision(shot.GetComponent<Collider>(), GetComponent<Collider>());
 		shot.GetComponent<Rigidbody>().velocity = transform.forward * m_ShotSpeed;		
+	}
+
+	public override void Reset(){
+		base.Reset ();
+		m_SpellReloadCounter = 0;
 	}
 }

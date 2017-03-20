@@ -7,6 +7,8 @@ public class Theft : Character {
 	[SerializeField]public GameObject m_Trap;
 	[SerializeField]public GameObject m_TrapSpawn;
 	[SerializeField]public GameObject m_ObjectContainer;
+	[SerializeField] public float m_CrouchTime = 0.7f;
+	private float m_CrouchCounter = 0;
 
 	// Start Animation "Die"
 	public void Kill() {
@@ -29,6 +31,18 @@ public class Theft : Character {
 			}
 			CrystalManager.instance.CrystalCollected (go);
 			SpeedUp ();
+		}
+	}
+
+	public void Update(){
+		if (m_CrouchCounter > 0) {
+			m_CrouchCounter += Time.deltaTime;		
+		}
+
+		if (m_CrouchCounter >= m_CrouchTime) {
+			//m_Animator.SetBool ("Crouch", false);
+			Debug.Log ("Finish crouch");
+			m_CrouchCounter = 0;
 		}
 	}
 
@@ -65,7 +79,19 @@ public class Theft : Character {
 
 		m_Animator.Play("Crouch");
 
-		Debug.Log ("Trap layed");
+		//m_Animator.SetBool ("Crouch", true);
+		m_CrouchCounter = Time.deltaTime;
 	}
 
+	public override void Reset(){
+		base.Reset ();
+		m_CrouchCounter = 0;
+		/*
+		transform.position = m_StartTransform.position;
+		transform.rotation = m_StartTransform.rotation;
+		m_CrouchCounter = 0;
+		m_SpeedUpCounter = 0;
+		m_Crystals = 0;
+		m_CrystalLoads = 0;*/
+	}
 }

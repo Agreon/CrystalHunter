@@ -6,7 +6,7 @@ using AI.FiniteStateMachine;
 public class CountdownState : FSMState<GameManager>
 {
 	public float m_CountdownDuration = 3;
-	private float m_Counter = 0;
+	private float m_Counter;
 
 	private Text m_CountdownText;
 
@@ -14,6 +14,17 @@ public class CountdownState : FSMState<GameManager>
 		m_CountdownText = GameObject.Find("CountdownText").GetComponent<Text>();
 		m_CountdownText.enabled = true;
 		Camera.main.GetComponent<Animator> ().Play ("CameraFly");
+
+		_context.m_Theft.GetComponent<Animator> ().SetBool ("Crouch", false);
+
+		m_Counter = 0;
+
+		GlobalConfig.IN_GAME = true;
+		/*Pillar[] pillars = GameObject.FindObjectsOfType<Pillar> ();
+		foreach(Pillar p in pillars){
+			p.UpdateMaterial(); 
+		}*/
+
 	}
 		
 	public void shutdown(){
@@ -33,6 +44,7 @@ public class CountdownState : FSMState<GameManager>
 		if (m_Counter > m_CountdownDuration) {
 			shutdown ();
 			_context.m_FromPause = false;
+			_context.m_PlayTime = 0;
 			_machine.changeState<PlayState> ();
 		}
 	}

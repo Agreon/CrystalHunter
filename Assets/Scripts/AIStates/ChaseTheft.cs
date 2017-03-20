@@ -41,7 +41,7 @@ public class ChaseTheft : FSMState<AIInput>
 				canSeeTheft = true;
 			} 
 		}
-		Debug.Log (_context.m_Character.m_SpellReloadCounter);
+		//Debug.Log (_context.m_Character.m_SpellReloadCounter);
 		// Shoot at player TODO: TEMP
 		if(canSeeTheft && _context.m_Character.m_SpellReloadCounter >= _context.m_Character.m_SpellReloadTime/*_context.m_Character.m_CrystalLoads == 3*/) {
 
@@ -119,6 +119,11 @@ public class ChaseTheft : FSMState<AIInput>
 
 		if(m_Agent.enabled) {
 			m_Agent.SetDestination(m_Target.position);
+		}
+
+		// TODO: TEMP
+		if (m_Agent.enabled == false) {
+			return;
 		}
 
 		Vector3 velocity = m_Agent.nextPosition - m_Character.position;

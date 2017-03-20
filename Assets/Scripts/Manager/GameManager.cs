@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour {
 	public Theft m_Theft;
 	public CrystalMaster m_CrystalMaster;
 
-	public Transform m_TheftStart;
-	public Transform m_CrystalMasterStart;
 	public Transform m_CameraStart;
 
 	public Canvas m_Canvas;
@@ -25,8 +23,13 @@ public class GameManager : MonoBehaviour {
 
 	public int m_CurrentRound = 0;
 	public int[] m_Rounds;
+	public float m_PlayTime;
+
+
+	// TODO: Needed?
 	public bool m_FromPause = false;
-	
+
+
 	// Temp
 	public bool m_GameOver = false;
 
@@ -37,13 +40,7 @@ public class GameManager : MonoBehaviour {
 			Destroy (gameObject);
 			return;
 		}
-
-		GlobalConfig.IN_GAME = true;
-
-		m_TheftStart = m_Theft.transform;
-		m_CrystalMasterStart = m_CrystalMaster.transform;
-		m_CameraStart = Camera.main.transform;
-
+			
 		m_Rounds = new int[2];
 		m_Machine = new FSM<GameManager>( this, new MenuState() );
 
@@ -52,8 +49,6 @@ public class GameManager : MonoBehaviour {
 		m_Machine.addState( new PlayState() );
 		m_Machine.addState( new ScoreState() );
 		m_Machine.addState( new PauseState() );
-
-		Cursor.visible = false;
 	}
 
 	// Use this for initialization

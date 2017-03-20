@@ -5,8 +5,6 @@ using AI.FiniteStateMachine;
 
 public class PlayState : FSMState<GameManager>
 {	
-	private float m_PlayTime;
-
 	private Text m_TimeText;
 	private Text m_CrystalText;
 	
@@ -18,9 +16,10 @@ public class PlayState : FSMState<GameManager>
 		_context.m_GameOver = false;
 
 		CrystalManager.instance.enable();
-		_context.m_Theft.GetComponent<Animator> ().enabled = true;
+
+		_context.m_Theft.GetComponent<Animator> ().SetBool ("Crouch", false);
+
 		Camera.main.GetComponent<CameraPositioner> ().enabled = true;
-		m_PlayTime = 0;
 
 		AudioManager.instance.SetBreathing (true);
 	
@@ -53,26 +52,7 @@ public class PlayState : FSMState<GameManager>
 			_context.m_CrystalMaster.GetComponent<AIInput>().enabled = true;
 			_context.m_CrystalMaster.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 		}
-
-
-		if (_context.m_FromPause) {
-			return;
-		}
-
-		// Reset Chars
-		_context.m_Theft.transform.position = _context.m_TheftStart.position;
-		_context.m_Theft.transform.rotation = _context.m_TheftStart.rotation;
-		_context.m_CrystalMaster.transform.position = _context.m_CrystalMasterStart.position;
-		_context.m_CrystalMaster.transform.rotation = _context.m_CrystalMasterStart.rotation;
-		_context.m_Theft.GetComponent<Animator> ().Play ("Grounded");
-		_context.m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
-
-		// Clear temp objects
-		var ObjectContainer = GameObject.Find ("ObjectContainer");
-		foreach (Transform child in ObjectContainer.transform) {
-			GameObject.Destroy(child.gameObject);
-		}
-		CrystalManager.instance.clear ();
+			
 
 		// Enable UI
 		m_TimeText = GameObject.Find("CurrentTimetext").GetComponent<Text>();
@@ -99,9 +79,8 @@ public class PlayState : FSMState<GameManager>
 		m_TimeText.enabled = false;
 		m_CrystalText.enabled = false;
 
-		_context.m_Theft.GetComponent<PlayerInput>().enabled = false;
-		_context.m_CrystalMaster.GetComponent<PlayerInput>().enabled = false;
-		_context.m_CrystalMaster.GetComponent<AIInput>().enabled = false;
+		_context.m_Theft.DisableInput ();
+		_context.m_CrystalMaster.DisableInput ();
 
 		for (int i = 0; i < 3; i++) {
 			m_TheftCrystalLoads[i].GetComponent<Renderer>().enabled = false;
@@ -111,21 +90,22 @@ public class PlayState : FSMState<GameManager>
 		}
 
 		CrystalManager.instance.disable ();
+		AudioManager.instance.SetBreathing (false);
 	}
 		
 
 	public override void update( float deltaTime ) {
 
-		m_PlayTime += deltaTime;
+		_context.m_PlayTime += deltaTime;
 
-		m_TimeText.text = parseTime(m_PlayTime);
+		m_TimeText.text = parseTime(_context.m_PlayTime);
 
 		int crystals = _context.m_Theft.GetCrystals ();
 		m_CrystalText.text = "Crystals: " + crystals.ToString();
 
 
 		if (Input.GetKey (KeyCode.Escape)) {
-			AudioManager.instance.SetBreathing (false);
+			shutdown ();
 			_machine.changeState<PauseState> ();
 		}
 
@@ -152,7 +132,8 @@ public class PlayState : FSMState<GameManager>
 		// Show CM CrystalLoads
 		if (GlobalConfig.MULTIPLAYER) {
 
-			int CMCrystalLoads = _context.m_CrystalMaster.GetCrystalLoads();
+			//int CMCrystalLoads = _context.m_CrystalMaster.GetCrystalLoads();
+			int CMCrystalLoads = (int)_context.m_CrystalMaster.GetReloadCounter();
 
 			for(int i = 0; i < 3; i++){
 				if(i >= CMCrystalLoads){
@@ -179,7 +160,7 @@ public class PlayState : FSMState<GameManager>
 	}
 
 	/**
-		Parses float-time to Minutes 
+		Parses float-time to minutes 
 	**/
 	string parseTime(float time){
 		string retTime = "";
@@ -200,12 +181,9 @@ public class PlayState : FSMState<GameManager>
 	void GameOver(){
 
 		// Save Points
-		_context.m_Rounds[_context.m_CurrentRound] = _context.m_Theft.GetCrystals() + ((int)m_PlayTime/2); 
+		_context.m_Rounds[_context.m_CurrentRound] = _context.m_Theft.GetCrystals() + ((int)_context.m_PlayTime/2); 
 
 		shutdown();
-	
-		AudioManager.instance.SetBreathing (false);
-		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
 
 		_machine.changeState<ScoreState> ();
 	}

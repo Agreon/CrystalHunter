@@ -17,31 +17,30 @@ public class PauseState : FSMState<GameManager>
 		m_PauseText2 = GameObject.Find ("PauseText2").GetComponent<Text> ();
 		m_PauseText2.enabled = true;
 
-		CrystalManager.instance.disable ();
-		_context.m_Theft.disableInput ();
-		_context.m_CrystalMaster.disableInput ();
+		GlobalConfig.PAUSED = true;
 	}
 		
+	public void shutdown(){
+		// Disable UI
+		m_PauseText.enabled = false;
+		m_PauseText2.enabled = false;
+
+		GlobalConfig.PAUSED = false;
+	}
+
 	public override void update( float deltaTime ) {
 
 		// OnKey 'startGame'
 		if (Input.GetKeyUp(KeyCode.Space)) {
 
-			// Disable UI
-			m_PauseText.enabled = false;
-			m_PauseText2.enabled = false;
-
-			_context.m_FromPause = true;
-
+			shutdown ();
 			_machine.changeState<PlayState> ();
 		}
+
+		// On Menu
 		if(Input.GetKeyUp(KeyCode.Return)) {
 
-			m_PauseText.enabled = false;
-			m_PauseText2.enabled = false;
-
-			_context.m_FromPause = false;
-
+			shutdown ();
 			_machine.changeState<MenuState> ();
 		}
 	}

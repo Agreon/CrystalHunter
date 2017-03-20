@@ -7,6 +7,7 @@ public class GlobalConfig
 	static public bool MULTIPLAYER = false;
 	static public bool STARTUP = true;
 	static public bool IN_GAME = false;
+	static public bool PAUSED = false;
 }
 
 

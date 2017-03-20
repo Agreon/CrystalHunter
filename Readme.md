@@ -62,57 +62,109 @@ Catch-Another / Each other
 		=> Get all PointLights
 		=> Intensity => Set
 		
-	+ TODO: 
+	+ TODO: (Nach Prio)
+
+		+ Bugs 
+			+ Major
+				+ "Die" passiert 2x
+				+ Nach ende der ersten runde wird die kamera nicht resettet
+
+				+ startCrystal reset
+					=> Weil zu nah direkt aufgenommen
+
+				+ Manche UI-Elemente sind verpixelt
+					+ Countdown
+
+			+ Minor
+				+ NavMeshAgent Disable wenn gefangen
+					+ und wenn schießen
+				+ Pause 
+					+ nach der gefangenschaft wesentlich schneller
+
+				+ Golem hat initial 3 schuss 
+					=> zum testen
+
+		+ MetalMode
+			+ Standart: Im Konstruktor Materials setzen
+			+ Im Menü-Toggle
+				+ Mit Events auf Methoden zugreifen
+				+ Metallable Interface?
+					+ SetMode(bool)
+			=> Bugged?
+			+ Flammen in den kristallen?
+
+		+ Sounds
+			+ lay-trap
+			+ Shoot
+			+ pickup
+			+ Catched 
+				+ Golem-Hitting-ground	
+			+ Golem-Stomp
+				=> Wie checke ich den schritt?
+
+		+ IntroScreen
+
+		+ Map 
+			+ Pillar-Beleuchtung
+			+ Accesoirs
+				+ Skelette?	
+				+ Wände als Kristalle?				
+			+ Fackeln
+
+		+ Music 
+			+ Brechja raus?			
+
+
+		+ Codequali
+			+ Möglichst viel Zuweisen, ohne .Find
+			+ Namespaces
+			+ überflüssiges raus
+			+ Methoden alle groß/klein?
+			+ PIllar-Mat in MenuState Laden, nicht einzeln 
+
+		+ CrystalMaster
+			+ AI
+				+ verbessern
+			+ Alle 3 sekunden schießen?
+				=> kalibrieren
+				=> Collected er dann überhaupt kristalle?
+
+		+ NiceToHave
+		
+			Theft 		
+			+ specials
+				+ trap
+				+ invisible
+			+ getroffen
+				+ Bildschirm wird blurry und twisted
+				+ m_Counter * intensity
+
+
+			+ MenuManager
+			=> Camera fliegt in StartPosition bei Singleplayer-click
+				=> Kein Countdown, aber Intro
+
+			+ GameOver
+				+ BlurOut
+			+ Mehr als 3 Kristalle sammeln
+				=> Overload
+				=> Grayscale
+				=> Twist
+			=> Wenn getroffen
+				=> Twist
+		
+			+ Aufgeladener Crystall-Animation wenn 3 gesammelt?
+				+ shininess material
+				=> Animation hinkriegen
+				=> Lowe pri
 		+ Multiplayer
 			+ Input 
 				+ Golem is too fast
 				=> Ugly workaround?
 					=> PlayerInput ( if ai, halbiere(0.6/07) den move-vector
-		+ CrystalMaster
-			+ On PlayerColl
-				+ Turn to player
-				+ oder nur, wenn wirklich zu spieler gerichtet
-				+ Vektor-Ausrichtung (Dot-Produkt?)
-				+ Theft-Look-At-Golem
-				+ Golem-Look-At
-			+ AI
-				+ verbessern
 
-		+ Bugs
-			+ HideMouse
-			+ SetMetalMode if already activated after game 
-			+ ExitGame
-
-		+ SoundManager
-			+ Respond to music
-			
-			+ 78,126,245
-			+ 210, 17,17
-
-
-			+ 100,53,15
-			+ DontDestroyOnReload macht die StateMachine kaputt
-			
-		+ UI
-			+ Polish ScoreScreen
-			
-			+ Aufgeladener Crystall-Animation wenn 3 gesammelt?
-			+ shininess material
-			=> Animation hinkriegen
-			=> Lowe prio
-		+ Animationen
-			+ Goelm, Wenn gefangen
-
-
-		+ Codequali
-			+ UI-CrystalLoads übergeben, nicht finden
-			+ Namespaces
-	
-	+ Bedenken. 
-		+ Nicht zu wenige Items, damit es nicht zu langweilig wird
-		+ Nicht zu viele, damit es nicht zu schnell ist.
-		
-		=> UI
+				+ SpeedUp is too fast
+					=> workaround
 		
 	+ assetstore bringt vlt. Inspiration
 		+ https://www.assetstore.unity3d.com/en/#!/content/58821 | Low Poly: Free Pack
