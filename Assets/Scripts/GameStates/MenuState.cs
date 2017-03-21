@@ -9,7 +9,7 @@ public class MenuState : FSMState<GameManager>
 	private GameObject m_MultiPlayerBtn;
 	private GameObject m_ExitBtn;
 	private GameObject m_MetalModeToggle;
-
+	private List<Pillar> m_Pillars;
 	/**
 	 * Get UI-Compos, enable them 
 	 **/
@@ -23,35 +23,17 @@ public class MenuState : FSMState<GameManager>
 
 		GlobalConfig.IN_GAME = false;
 
-		Pillar[] pillars = GameObject.FindObjectsOfType<Pillar> ();
-		foreach(Pillar p in pillars){
+		// Spawn special MenuCrystal with better Lighting and smaller collision-box
+		GameObject menuCrystal = GameObject.Find ("MenuCrystalPickup");
+		GameObject.Instantiate (menuCrystal, _context.m_MenuCrystalStart.position, Quaternion.LookRotation (new Vector3 (1, 0, 0)));
+
+		m_Pillars = GameObject.FindObjectsOfType<Pillar> ();
+		foreach(Pillar p in m_Pillars){
 			p.LoadMaterial ();
 			p.UpdateMaterial(); 
 		}
 
-		// Resetting of GameObjects
-
-		// Clear temp objects
-		var ObjectContainer = GameObject.Find ("ObjectContainer");
-		foreach (Transform child in ObjectContainer.transform) {
-			GameObject.Destroy(child.gameObject);
-		}
-
-		CrystalManager.instance.clear ();
-
-		// Reset Chars
-		_context.m_Theft.Reset();
-		_context.m_CrystalMaster.Reset ();
-
 		_context.m_Theft.GetComponent<Animator> ().Play ("GrabbingCrystal");
-		//_context.m_Theft.GetComponent<Animator> ().Play ("Crouch");
-		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Forward", 0);
-		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Turn", 0);
-		_context.m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
-
-		// Reset Camera
-		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
-		Camera.main.GetComponent<CameraController> ().Reset ();
 
 		enableUI ();
 	}
@@ -106,6 +88,8 @@ public class MenuState : FSMState<GameManager>
 		AudioManager.instance.PlaySound("menu_click");
 		shutdown ();
 
+		_context.m_CrystalMaster.m_SpellReloadTime = 3;
+
 		GlobalConfig.MULTIPLAYER = false;
 		_machine.changeState<IntroState> ();
 	}
@@ -114,6 +98,9 @@ public class MenuState : FSMState<GameManager>
 
 		AudioManager.instance.PlaySound("menu_click");
 		shutdown ();
+
+		// Make it harder for human player
+		_context.m_CrystalMaster.m_SpellReloadTime = 6;
 
 		GlobalConfig.MULTIPLAYER = true;
 		_machine.changeState<IntroState> ();
@@ -130,15 +117,14 @@ public class MenuState : FSMState<GameManager>
 			AudioManager.instance.Play (false, null);
 		}
 
-		// TODO: Find sollte wo anders hin
-		Pillar[] pillars = GameObject.FindObjectsOfType<Pillar> ();
-		foreach(Pillar p in pillars){
+
+		// TODO: Find should be done on init
+		foreach(Pillar p in m_Pillars){
 			p.UpdateMaterial(); 
 		}
 	}
 
 	public void ExitGame(){
-
 		AudioManager.instance.PlaySound("menu_click");
 
 		Application.Quit();

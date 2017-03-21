@@ -237,7 +237,6 @@ public class AudioProcessor : MonoBehaviour
 
 	public void changeCameraColor ()
 	{
-		//Debug.Log("camera");
 		float r = Random.Range (0f, 1f);
 		float g = Random.Range (0f, 1f);
 		float b = Random.Range (0f, 1f);

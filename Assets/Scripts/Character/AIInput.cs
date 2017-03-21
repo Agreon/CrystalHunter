@@ -5,12 +5,11 @@ using AI.FiniteStateMachine;
 [RequireComponent(typeof (UnityEngine.AI.NavMeshAgent))]
 [RequireComponent(typeof (Character))]
 public class AIInput : MonoBehaviour {
-	
-	// TODO: Dont serialize
-	public CrystalMaster m_Character;
+
 	public Theft m_Theft;
 
-	public GameObject m_TargetedCrystal;
+	[HideInInspector] public CrystalMaster m_Character;
+	[HideInInspector] public GameObject m_TargetedCrystal;
 
 	private FSM<AIInput> m_Machine;
 

@@ -2,11 +2,10 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-
     [RequireComponent(typeof (Character))]
     public class PlayerInput : MonoBehaviour
     {
-      	public bool _secondPlayer = false;
+      	public bool m_SecondPlayer = false;
       
         private Character m_Character; 
 
@@ -19,7 +18,7 @@ using UnityStandardAssets.CrossPlatformInput;
         private void FixedUpdate()
 	        {
 			string player = "";
-			if (_secondPlayer) {
+			if (m_SecondPlayer) {
 				player = "P2 ";
 			} else {
 				player = "P1 ";

@@ -14,7 +14,7 @@ public class ScoreState : FSMState<GameManager>
 
 
 	public override void begin() {
-		// TODO:	_context.m_Canvas.transform.Find(
+		// TODO:_context.m_Canvas.transform.Find(
 		m_ScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
 		m_Player1Score = GameObject.Find("Player1Score").GetComponent<Text>();
 		m_Player2Score = GameObject.Find("Player2Score").GetComponent<Text>();
@@ -67,26 +67,10 @@ public class ScoreState : FSMState<GameManager>
 		m_Player1Score.enabled = false;
 		m_Player2Score.enabled = false;
 		m_WinnerText.enabled = false;
-
-		// Clear temp objects
-		var ObjectContainer = GameObject.Find ("ObjectContainer");
-		foreach (Transform child in ObjectContainer.transform) {
-			GameObject.Destroy(child.gameObject);
-		}
-
-		CrystalManager.instance.clear ();
-
-		// Reset Chars
-		_context.m_Theft.Reset();
-		_context.m_CrystalMaster.Reset ();
 	
-		_context.m_Theft.GetComponent<Animator> ().Play ("Crouch");
-		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Forward", 0);
-		_context.m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Turn", 0);
-		_context.m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
+		//Camera.main.GetComponent<Animator> ().Play ("CameraBlur");
 
-		// Reset Camera
-		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
+		_context.ResetObjects ();
 	}
 
 	public override void update( float deltaTime ) {
@@ -98,12 +82,22 @@ public class ScoreState : FSMState<GameManager>
 			if(GlobalConfig.MULTIPLAYER && _context.m_CurrentRound == 0){
 				// Return to PlayState
 				_context.m_CurrentRound = 1;
-				_machine.changeState<CountdownState> ();		
+				_machine.changeState<IntroState> ();		
 			} else {
 				// Change to MenuScene
+				//StartCoroutine(SwitchState());
 				_machine.changeState<MenuState>();
 			}
 		}
 		
 	}
+
+
+
+	IEnumerator SwitchState(){
+		// Wait for Animation to finish
+		yield return new WaitForSeconds(2);
+			_machine.changeState<MenuState>();
+	}
+
 }

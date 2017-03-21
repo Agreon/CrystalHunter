@@ -8,29 +8,28 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator))]
 public abstract class Character : Trappable
 {
-	public int m_Crystals = 0;
-	public int m_CrystalLoads = 0;
-	public float m_MovementSpeed = 1;
-	public float m_CurrentSpeed;
-	public float m_SpeedUpDuration = 2;
-	//TODO: SpeedUpMultiplier
+	[SerializeField] public float m_MovementSpeed = 1;
+	[SerializeField] public float m_SpeedUpDuration = 2f;
+	[SerializeField] public float m_SpeedUpMultiplier = 1.5f;
+	// for resetting
+	[SerializeField] public Transform m_StartTransform;
 
-	private float m_OverloadCounter;
-	protected float m_SpeedUpCounter;
+	[HideInInspector] public int m_Crystals = 0;
+	[HideInInspector] public int m_CrystalLoads = 0;
 
-	public Transform m_StartTransform;
+	private float m_CurrentSpeed;
+	private float m_SpeedUpCounter;
 
-	// TODO: Check whats needed
+	// ThirdpersonChar-Variables
 	[SerializeField] float m_MovingTurnSpeed = 360;
 	[SerializeField] float m_StationaryTurnSpeed = 180;
-	[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
-
-	Rigidbody m_Rigidbody;
+	[SerializeField] float m_RunCycleLegOffset = 0.2f; 
+	private Rigidbody m_Rigidbody;
 	protected Animator m_Animator;
-	const float k_Half = 0.5f;
-	float m_TurnAmount;
-	float m_ForwardAmount;
-	Vector3 m_GroundNormal;
+	private float k_Half = 0.5f;
+	private float m_TurnAmount;
+	private float m_ForwardAmount;
+	private Vector3 m_GroundNormal;
 	
 	public Character() {}
 	
@@ -76,20 +75,18 @@ public abstract class Character : Trappable
 	}
 
 	public void SpeedUp(){
-		m_CurrentSpeed = m_MovementSpeed*1.5f;
+
+		AudioManager.instance.PlaySound ("pickup_speedup");
+
+		m_CurrentSpeed = m_MovementSpeed*m_SpeedUpMultiplier;
 		m_SpeedUpCounter = 0;
 
 		// Workaround for animator-bug
 		if (GlobalConfig.MULTIPLAYER && gameObject.name == "CrystalMaster") {
-			m_CurrentSpeed = m_MovementSpeed * (1.5f * 0.8f);
+			m_CurrentSpeed = m_MovementSpeed * (m_SpeedUpMultiplier * 0.8f);
 		}
 	}
-
-	public void Overload(){
-		//FindObjectOfType<Camera> ().GetComponent<Twirl> ().enabled = true;
-
-	}
-
+		
 	void UpdateAnimator(Vector3 move)
 	{
 		if (m_Trapped) {
@@ -132,23 +129,16 @@ public abstract class Character : Trappable
 		}
 	}
 
+	// Trap character (just disable input)
 	public override void Trap(){
-		Debug.Log ("Catched");
 		m_Trapped = true;
 		this.DisableInput ();
-
-		/*// So that the char is in the middle of the trap
-		this.Move (new Vector3 (0,0,0));
-		m_Animator.SetFloat("Forward", 0, 0.5f, Time.deltaTime);
-		m_Animator.SetFloat("Turn", 0, 0.5f, Time.deltaTime);*/
 	}
 
+	// Releases the character
 	public override void Release(){
 		m_Trapped = false;
-
-		//m_Animator.Play("Grounded");
-	
-		// TODO: Test
+			
 		if (GlobalConfig.MULTIPLAYER) {
 			GetComponent<PlayerInput> ().enabled = true;		
 		} else {
@@ -161,7 +151,6 @@ public abstract class Character : Trappable
 				GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
 			}
 		}
-
 	}
 
 	public int GetCrystals(){
@@ -172,6 +161,7 @@ public abstract class Character : Trappable
 		return m_CrystalLoads;
 	}
 		
+	// Disable all Input, from Player as well as AI
 	public void DisableInput(){
 		GetComponent<PlayerInput>().enabled = false;
 		if (GetComponent<AIInput> () != null) {
@@ -189,6 +179,7 @@ public abstract class Character : Trappable
 		}
 	}
 
+	// Reset position and values
 	public virtual void Reset(){
 		transform.position = m_StartTransform.position;
 		transform.rotation = m_StartTransform.rotation;
@@ -199,5 +190,6 @@ public abstract class Character : Trappable
 	}
 		
 	public abstract void Action();
+	public abstract bool ActionAllowed();
 	public abstract void OnCollisionEnter(Collision collision); 
 }

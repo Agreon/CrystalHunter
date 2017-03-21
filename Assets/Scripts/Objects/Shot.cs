@@ -20,6 +20,7 @@ public class Shot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		// Save velocity if game is paused
 		if (GlobalConfig.PAUSED && m_RigidBody.velocity.magnitude != 0) {
 			m_SavedVelocity = m_RigidBody.velocity;
 			m_RigidBody.velocity = new Vector3(0,0,0);
@@ -32,7 +33,8 @@ public class Shot : MonoBehaviour {
 	}
 
 	private void CatchTheft(Theft theft){
-		Debug.Log ("Hit theft");
+
+		//AudioManager.instance.PlaySoundQueue ("shot_hit1");
 
 		var position = theft.m_TrapSpawn.transform.position;
 		position.y = 0.4f;
@@ -47,7 +49,9 @@ public class Shot : MonoBehaviour {
 	}
 
 	private void CollideWall(Vector3 wallNormal){
-		wallNormal.y = -0.65f;
+		AudioManager.instance.PlaySound ("hit_wall");
+		wallNormal.y = -0.65f;	// So that the shot flies to the ground
+
 		transform.rotation = Quaternion.LookRotation(wallNormal);
 		GetComponent<Rigidbody>().velocity = wallNormal * 5;
 	}

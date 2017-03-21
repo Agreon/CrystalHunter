@@ -46,21 +46,40 @@ public class AudioManager : MonoBehaviour {
 	void Start () {
 		if (GlobalConfig.STARTUP) {
 			GlobalConfig.STARTUP = false;
-			//Play (false, "Thursday");
+			//Play (false, "Dustup");
+			Play (false, "Thursday");
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		// If no music is playing, play random music 
 		if (m_MusicSource.isPlaying == false) {
 			Play (GlobalConfig.METAL_MODE, null);
 		}
+
+		// If current sound is finished, play the next in the queue 
 		if (m_Soundqueue.Count > 0 && m_SoundEffectsSource.isPlaying == false) {
 			m_SoundEffectsSource.clip = m_Soundqueue.Dequeue ();
 			m_SoundEffectsSource.Play ();
 		}
 	}
+		
+	// Get sound by name
+	private AudioClip FindSound(string name, Object[] sounds){
+		int index = 0;
 
+		for (int i = 0; i < sounds.Length; i++) {
+			var clip = sounds [i] as AudioClip;
+			if (clip.name.Contains (name)) {
+				index = i;
+				break;
+			}
+		}
+		return sounds [index] as AudioClip;
+	}
+
+	// Plays a sound 
 	public void Play(bool metal, string name){
 		Object[] music;
 
@@ -88,41 +107,36 @@ public class AudioManager : MonoBehaviour {
 
 		m_MusicPopup.Show (tokens [0].Trim(), tokens [1].Trim(), 4);
 	}
-
-	private AudioClip FindSound(string name, Object[] sounds){
-		int index = 0;
-
-		for (int i = 0; i < sounds.Length; i++) {
-			var clip = sounds [i] as AudioClip;
-			if (clip.name.Contains (name)) {
-				index = i;
-				break;
-			}
-		}
-		return sounds [index] as AudioClip;
-	}
-
+		
+	// Plays a sound effect
 	public void PlaySound(string name) {
 		m_SoundEffectsSource.clip = FindSound(name, m_Sounds);
 		m_SoundEffectsSource.Play ();
 	}
 
-	// Plays a sound effect
+	// Adds a effect to the soundQueue so the current one is not aborted
 	public void PlaySoundQueue(string name){
 		m_Soundqueue.Enqueue (FindSound(name,m_Sounds));
 	}
-
+		
+	// Subscribe method for Beatlisteners 
 	public void Listen(BeatListener bl){
 		m_AudioProcessor.onBeat.AddListener (bl.OnBeat);
 		m_AudioProcessor.onSpectrum.AddListener (bl.OnSpectrum);
 	}
 
+	// (De)Activates the theft-breathing
 	public void SetBreathing(bool b){
 		if (b) {
 			m_BreathingSource.Play ();
 		} else {
 			m_BreathingSource.Pause ();
 		}
+	}
+
+	public void ClearQueue(){
+		m_SoundEffectsSource.Stop ();
+		m_Soundqueue.Clear ();
 	}
 
 

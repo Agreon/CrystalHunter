@@ -7,14 +7,15 @@ public class Theft : Character {
 	[SerializeField]public GameObject m_Trap;
 	[SerializeField]public GameObject m_TrapSpawn;
 	[SerializeField]public GameObject m_ObjectContainer;
-	[SerializeField] public float m_CrouchTime = 0.7f;
-	private float m_CrouchCounter = 0;
 
 	// Start Animation "Die"
 	public void Kill() {
-		AudioManager.instance.PlaySoundQueue ("wilhelm");
+		if (GlobalConfig.METAL_MODE) {
+			AudioManager.instance.PlaySoundQueue ("mad_scream");
+		} else {
+			AudioManager.instance.PlaySoundQueue ("wilhelm");
+		}
 		m_Animator.Play("Die");
-		Debug.Log ("Die");
 	}
 	
 	/**
@@ -35,40 +36,40 @@ public class Theft : Character {
 	}
 
 	public void Update(){
-		if (m_CrouchCounter > 0) {
-			m_CrouchCounter += Time.deltaTime;		
-		}
-
-		if (m_CrouchCounter >= m_CrouchTime) {
-			//m_Animator.SetBool ("Crouch", false);
-			Debug.Log ("Finish crouch");
-			m_CrouchCounter = 0;
-		}
 	}
 
-	/**
-		Lay Trap
-		TODO: UI-Feedback (ShowPopup!)
-	**/
-	public override void Action(){
-
+	public override bool ActionAllowed(){
 		// If Animation is already playing, dont execute
 		AnimatorStateInfo s = m_Animator.GetCurrentAnimatorStateInfo(0);
 		if (s.shortNameHash == Animator.StringToHash ("Crouch")) {
-			return;
+			return false;
 		}
 
 		// If not enough crystals
 		if (m_CrystalLoads < 3) {
+			// Show Popup
 			GameManager.instance.ShowNotification (true, "Not enough Crystals!");
 			AudioManager.instance.PlaySound ("not_possible");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+		Lay Trap
+	**/
+	public override void Action(){
+
+		if (!ActionAllowed ()) {
 			return;
 		}
 
 		m_CrystalLoads = 0;
 
+		// Set SpawnPos of Trap
 		var spawnPos = m_TrapSpawn.transform.position;
-		spawnPos.y = 0.4f;	// TODO: Remove through inital good start
+		spawnPos.y = 0.4f;	
 		
 		GameObject trap = Instantiate (m_Trap, spawnPos, m_TrapSpawn.transform.rotation, m_ObjectContainer.transform);
 
@@ -78,20 +79,10 @@ public class Theft : Character {
 		}
 
 		m_Animator.Play("Crouch");
-
-		//m_Animator.SetBool ("Crouch", true);
-		m_CrouchCounter = Time.deltaTime;
+		AudioManager.instance.PlaySound ("lay_trap");
 	}
 
 	public override void Reset(){
 		base.Reset ();
-		m_CrouchCounter = 0;
-		/*
-		transform.position = m_StartTransform.position;
-		transform.rotation = m_StartTransform.rotation;
-		m_CrouchCounter = 0;
-		m_SpeedUpCounter = 0;
-		m_Crystals = 0;
-		m_CrystalLoads = 0;*/
 	}
 }

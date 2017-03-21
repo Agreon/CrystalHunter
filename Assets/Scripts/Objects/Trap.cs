@@ -26,7 +26,7 @@ public class Trap : MonoBehaviour {
 			m_Animator = GetComponentInChildren<Animator>();
 		}
 
-		AudioManager.instance.PlaySound ("raiseTrap");
+		AudioManager.instance.PlaySoundQueue ("raiseTrap");
 
 		m_IsTriggered = true;
 

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
 	public CrystalMaster m_CrystalMaster;
 
 	public Transform m_CameraStart;
+	public Transform m_MenuCrystalStart;
 
 	public Canvas m_Canvas;
 
@@ -24,11 +25,6 @@ public class GameManager : MonoBehaviour {
 	public int m_CurrentRound = 0;
 	public int[] m_Rounds;
 	public float m_PlayTime;
-
-
-	// TODO: Needed?
-	public bool m_FromPause = false;
-
 
 	// Temp
 	public bool m_GameOver = false;
@@ -65,6 +61,34 @@ public class GameManager : MonoBehaviour {
 	void Update() {
 		// update the state machine
 		m_Machine.update( Time.deltaTime );
+	}
+
+
+	public void ResetObjects(){
+		// Clear temp objects
+		var ObjectContainer = GameObject.Find ("ObjectContainer");
+		foreach (Transform child in ObjectContainer.transform) {
+			GameObject.Destroy(child.gameObject);
+		}
+
+		//AudioManager.instance.ClearQueue ();
+
+		CrystalManager.instance.clear ();
+
+		// Reset Chars
+		m_Theft.Reset();
+		m_CrystalMaster.Reset ();
+
+		m_Theft.GetComponent<Animator> ().SetBool("Crouch",true);
+		m_Theft.GetComponent<Animator> ().Play ("GrabbingCrystal");
+		m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Forward", 0);
+		m_CrystalMaster.GetComponent<Animator> ().SetFloat ("Turn", 0);
+		m_CrystalMaster.GetComponent<Animator> ().Play ("Grounded");
+
+		// Reset Camera
+		Camera.main.GetComponent<CameraPositioner> ().enabled = false;
+		Camera.main.GetComponent<CameraController> ().Reset ();
+	
 	}
 
 	public void ShowNotification(bool theft, string message, float time = 3f){

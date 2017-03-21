@@ -41,6 +41,7 @@ public class PauseState : FSMState<GameManager>
 		if(Input.GetKeyUp(KeyCode.Return)) {
 
 			shutdown ();
+			_context.ResetObjects ();
 			_machine.changeState<MenuState> ();
 		}
 	}

@@ -58,7 +58,6 @@ public class BeatListener : MonoBehaviour {
 	}
 
 	public void OnBeat(){
-		Debug.Log ("BEAT");
 		m_Counter = 0.001f;
 		m_Beat = true;
 	}

@@ -54,7 +54,13 @@ public class CrystalManager : MonoBehaviour {
 		m_Crystals = new List<GameObject>();
 	}
 		
-	void SpawnCrystal(){
+	public void SpawnCrystal(Vector3 position = default(Vector3)){
+
+		// If position is already set
+		if (position.magnitude != 0) {
+			m_Crystals.Add (Instantiate(m_CrystalPickup, position, Quaternion.LookRotation(new Vector3(1,0,0)), m_ObjectContainer.transform));
+			return;
+		}
 
 		Vector3 spawnAt = new Vector3 ();
 

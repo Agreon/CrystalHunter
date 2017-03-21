@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
-
-
+	
 	public class CameraController : MonoBehaviour
 	{
 
@@ -23,11 +21,12 @@ using System.Collections.Generic;
 		void Start(){
 		}
 		
-		// TODO: Lerping between red and orange
+		/**
+		 * Lerps color
+		 * */
 		void Update(){
 
 			float t = Mathf.PingPong(Time.time, m_LerpDuration) / m_LerpDuration;
-
 
 			Color color1, color2;
 
@@ -47,10 +46,8 @@ using System.Collections.Generic;
 	}
 
 	public void OnBeat(){
-		//m_ColorStandart = new Color ((float)(Random.Range (50, 120))/255f, 0, 0, 255);
 		m_Counter = 0.001f;
 		m_Beat = true;
-		//Debug.Log ("Beat");
 	}
 
 	public void OnSpectrum(float[] spectrum){
@@ -58,6 +55,7 @@ using System.Collections.Generic;
 	}
 
 	public void Reset(){
+		GetComponent<Animator> ().Play ("Idle");
 		transform.position = m_StartTransform.position;
 		transform.rotation = m_StartTransform.rotation;
 	}

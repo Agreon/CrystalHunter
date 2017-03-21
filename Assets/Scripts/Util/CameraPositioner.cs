@@ -27,7 +27,6 @@ using System.Collections.Generic;
 		[SerializeField]
 		private float maxHeight = 8f;
 
-		// TODO: Debug
 		[SerializeField]
 		private GameObject centerObject;
 

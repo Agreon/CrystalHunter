@@ -20,29 +20,35 @@ public class CollectCrystal : FSMState<AIInput>
 	}
 		
 	/**
-		TODO: Is Player near ? Is Crystal Collected?
-		=> Variables in AIInput? (MinDistToCrystal/Player)
-	
+	* Check distances
 	**/
 	public override void reason() {
+
+		// If Crystal collected, chase theft again
 		if(_context.m_TargetedCrystal == null) {
 			_machine.changeState<ChaseTheft>();
+			return;
 		}
-		
-		//TODO: Distance to player
-		
+
+		float distanceToPlayer = Vector3.Distance (_context.m_Theft.transform.position, m_Character.position);
+		float distanceToCrystal = Vector3.Distance ( m_Target.position, m_Character.position);
+
+		// If distance to player < targetedCrystal
+		if (distanceToPlayer < distanceToCrystal) {
+			_machine.changeState<ChaseTheft> ();
+		}
 	}
 		
 	/**
-		TODO: Get move-direction of agent
+		Moves to destination
 	*/
 	public override void update( float deltaTime ) {
+
 		if(m_Agent.enabled) {
 			m_Agent.SetDestination(m_Target.position);
 		}
 
 		Vector3 velocity = m_Agent.nextPosition - m_Character.position;
-
 		_context.m_Character.Move(velocity);
 	}
 }

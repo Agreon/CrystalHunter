@@ -1,81 +1,61 @@
+## Intro
+Oh No! 
+The CrystalMaster has found you stealing his Crystals. 
+Run for your life!
 
-Catch-Another / Each other
-+ Abwechselndes Fangen
-+ Coins aufheben beschleunigen einen sehr kurzfristig
-+ 3x Coin => Item
-+ Man kann items aufheben
-	+ Verfolger
-		+ Schleimschüsse
-		+ Wände hochziehen an stellen
-		+ vlt. Wenn schüsse daneben gehen
-	+ Verfolgter
-		+ Fallen
-			+ Gegner sieht sie nicht? Schwer zu machen.. in lokalem koop ^^
-			+ Dann sieht sie keiner von beiden?
-			+ Oder beide
-			+ der verfolgte wirft sie hinter sich
-	+ Droppen zufällig alle par sekunden
-+ Wechsel
-	+ Alle 30 Sekunden?
-	+ In Box?
-	+ insgesamt 3 minuten zeit?
-	+ Abwechselnd >= Wer hält länger aus?
-+ Map
-	+ Möglichst Klein und verwinkelt, aber immer mit 2 Ausgängen
-	+ Viele einzelne säulen?
-	+ Bei jedem game neu generiert?
+**Control**
++ Collect Crystals to use their power and speedUp
++ Collect 3 Crystals to lay a trap [Space] and hopefully get some time
++ If you need a break, press [escape] to pause the game!
 
-+ Fragen
-	+ Wie wird es über Zeit schwerer?
-		+ Durch die Blöcke die man hochzieht?
-	+ wie droppen items?
-		+ Zufällig alle paar sekunden
-		+ Nach 3 Coins
-	+ Kamera?
-		+ Geht soweit nach hinten, solange noch beide charaktere im bild sind
-		+ Min/Max-Distanz
-	+ Gewonnen
-		+ Wenn man den anderen fängt
-		+ Wenn der Dieb 50 Kristalle hat
+**Multiplayer**
++ Run with the arrows
++ Shoot Crystals with [ctrl]
 
-+ Setting?
-	+ Magier in kerker?
-	+ Crystal Hunter
-		+ Einer klaut kristalle vom Kristallmeister
-			+ und legt kristall-fallen
-		+ dieser versucht ihn zu Fangen
-			+ mit magie(kristall)-schüssen
-			+ wo sie treffen, kommen kristalle als blockaden
-			+ wenn sie den verfolgten treffen, [ist er gefangen?/ wird er kurz langsamer]
-		+ beide sammeln die kristalle(3/1) in [der Höhle/Kerker/Meistershaus(Bücherregale)] um deren Energie für ihre Magie zu verwenden
-		+ Jeder Kristall bring einen kurzen Boost?
-			+ Nur wenn gegner gefangen werde muss
-		+ Sobald er gefangen wurde, 
-			+ Punch-Animation
-			+ Der andere ist dran
-		+ wer mehr kristalle gesammelt hat, gewinnt! ( verrechnet mit zeit? )
-		+ Golem bisschen langsamer als Dieb
-	+ Schlechte beleuchtung
-	+ Schüsse sind ParticleSystems
-		+ Erleuchten umgebung
-	+ Kristall glimmen leicht im takt der musik?
-		=> Get all PointLights
-		=> Intensity => Set
+
 		
 	+ TODO: (Nach Prio)
 
-		+ Bugs 
-			+ Major
-				+ "Die" passiert 2x
-				+ Nach ende der ersten runde wird die kamera nicht resettet
+		+ TODO 
+			+ Major							
+				+ Camera weiter nach vorne setzen?
+					=> Ja
+					=> FlyAnim muss abgeändert werden
 
-				+ startCrystal reset
-					=> Weil zu nah direkt aufgenommen
 
-				+ Manche UI-Elemente sind verpixelt
-					+ Countdown
+				+ Sounds
+					+ Golem-Stomp
+						=> Wie checke ich den schritt?
+					
+					=> Reset queue on Menu
+							
 
+				+ Map verschönern?
+					+ Pillar-Beleuchtung
+					+ Accesoirs
+						+ Skelette?	
+						+ Wände als Kristalle?				
+					+ Fackeln
+				+ Play-Again bei score?
+
+				+ CrystalMaster
+					+ AI
+						+ verbessern
+
+				+ Codequali
+					+ Möglichst viel Zuweisen, ohne .Find
+					+ Namespaces
+					+ überflüssiges raus
+					+ Methoden alle groß/klein?
+					+ PIllar-Mat in MenuState Laden, nicht einzeln 
+					+ Debug.Logs raus
+					+ menumanager kann raus?
+					+ instantiate-objs zu prefabs?
 			+ Minor
+				+ falle benötigt zu lange um aus dem boden zu kommen 
+
+				+ Camera-blur out/in weil figuren fallen 
+
 				+ NavMeshAgent Disable wenn gefangen
 					+ und wenn schießen
 				+ Pause 
@@ -84,50 +64,18 @@ Catch-Another / Each other
 				+ Golem hat initial 3 schuss 
 					=> zum testen
 
+				+ IntroScreen
+					+ Player1/2 über kopf der objekte
+			
 		+ MetalMode
-			+ Standart: Im Konstruktor Materials setzen
-			+ Im Menü-Toggle
-				+ Mit Events auf Methoden zugreifen
-				+ Metallable Interface?
-					+ SetMode(bool)
-			=> Bugged?
 			+ Flammen in den kristallen?
 
-		+ Sounds
-			+ lay-trap
-			+ Shoot
-			+ pickup
-			+ Catched 
-				+ Golem-Hitting-ground	
-			+ Golem-Stomp
-				=> Wie checke ich den schritt?
 
-		+ IntroScreen
-
-		+ Map 
-			+ Pillar-Beleuchtung
-			+ Accesoirs
-				+ Skelette?	
-				+ Wände als Kristalle?				
-			+ Fackeln
-
+			
 		+ Music 
 			+ Brechja raus?			
 
 
-		+ Codequali
-			+ Möglichst viel Zuweisen, ohne .Find
-			+ Namespaces
-			+ überflüssiges raus
-			+ Methoden alle groß/klein?
-			+ PIllar-Mat in MenuState Laden, nicht einzeln 
-
-		+ CrystalMaster
-			+ AI
-				+ verbessern
-			+ Alle 3 sekunden schießen?
-				=> kalibrieren
-				=> Collected er dann überhaupt kristalle?
 
 		+ NiceToHave
 		

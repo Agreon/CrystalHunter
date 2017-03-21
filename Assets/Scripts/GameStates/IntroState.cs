@@ -11,17 +11,12 @@ public class IntroState : FSMState<GameManager>
 	 * Get UI-Compos, enable them 
 	 **/
 	public override void begin() {
-		GlobalConfig.IN_GAME = true;
-
 		m_ConfirmText = GameObject.Find ("ConfirmText").GetComponent<Text> ();
 		m_ConfirmText.enabled = true;
 	}
 
 	// Switches to the Countdown
 	public void startGame() {
-
-		Debug.Log ("StartGame");
-
 		// Disable UI
 		m_ConfirmText.enabled = false;
 
@@ -31,7 +26,6 @@ public class IntroState : FSMState<GameManager>
 	public override void update( float deltaTime ) {
 		// OnKey 'startGame'
 		if (Input.anyKey) {
-			Debug.Log ("AnyKey");
 			startGame ();
 		}
 	}
