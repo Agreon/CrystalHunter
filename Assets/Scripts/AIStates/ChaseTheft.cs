@@ -131,7 +131,7 @@ public class ChaseTheft : FSMState<AIInput>
 			return;
 		}
 
-		// If the Theft is trapped, ignore all crystals 
+		// If the Theft is trapped, ignore all crystals
 		if (_context.m_Theft.IsTrapped ()) {
 			return;
 		}

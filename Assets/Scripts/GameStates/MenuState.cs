@@ -9,7 +9,7 @@ public class MenuState : FSMState<GameManager>
 	private GameObject m_MultiPlayerBtn;
 	private GameObject m_ExitBtn;
 	private GameObject m_MetalModeToggle;
-	private List<Pillar> m_Pillars;
+	private Pillar[] m_Pillars;
 	/**
 	 * Get UI-Compos, enable them 
 	 **/
