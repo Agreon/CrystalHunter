@@ -6,16 +6,20 @@ The CrystalMaster has found you stealing his Crystals!
 Run for your life!
 
 **Control**
-+ Collect Crystals to use their power and speedUp
++ Collect Crystals [wasd] to use their power and speedUp
+	+ Feel free to try out the gamepad-input ;)
 + Collect 3 Crystals to lay a trap [space] and hopefully get some time
 + If you need a break, press [escape] to pause the game!
 
 **Multiplayer**
 + Run with the arrows
-+ Shoot Crystals with [ctrl]
++ Shoot Crystals with [right-ctrl]
+
 
 ## Dev
 Please Ignore the MenuScene as it is not used anymore. The IntroScene is the new Start-Scene.
+
+
 There are still a lot of TODOS left:
 
 + Major							
