@@ -1,7 +1,10 @@
 sceneSetups:
-- path: Assets/GameScene.unity
+- path: Assets/Scenes/MenuScene.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/Scenes/GameScene.unity
   isLoaded: 1
   isActive: 1
-- path: Assets/ManyWorlds/Stealth Character/demo/DoneStealth.unity
+- path: Assets/Scenes/IntroScene.unity
   isLoaded: 0
   isActive: 0
